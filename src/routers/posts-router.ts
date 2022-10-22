@@ -1,50 +1,51 @@
 import {Request, Response, Router} from "express";
 import {postsRepository} from "../repositories/posts-repository";
+import {body, validationResult} from "express-validator";
+import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
+import {authValidationMiddleware} from "../middlewares/auth-validation-middleware";
 
 export const postsRouter = Router({})
+
+const titleValidation = body('title').isString().trim().isLength({
+    min: 3,
+    max: 30
+}).withMessage('Title length should be from 3 to 30 symbols')
+const descriptionValidation = body('shortDescription').isString().trim().isLength({
+    min: 3,
+    max: 100
+}).withMessage('Description length should be from 3 to 100 symbols')
+const contentValidation = body('content').isString().trim().isLength({
+    min: 3,
+    max: 1000
+}).withMessage('Content length should be from 3 to 1000 symbols')
+const blogIdValidation = body('blogId').isString().trim().isLength({
+    min: 1,
+    max: 30
+}).withMessage('Id length should be from 1 to 30 symbols')
+const blogNameValidation = body('blogName').isString().trim().isLength({
+    min: 3,
+    max: 30
+}).withMessage('Blog name should be from 3 to 30 symbols')
 
 postsRouter.get('/', (req: Request, res: Response) => {
     const foundPosts = postsRepository.findPosts()
     res.status(200).send(foundPosts)
 })
-postsRouter.post('/', (req: Request, res: Response) => {
+postsRouter.post('/',
+    authValidationMiddleware,
+    titleValidation,
+    descriptionValidation,
+    contentValidation,
+    blogIdValidation,
+    blogNameValidation,
+    inputValidationMiddleware,
+    (req: Request, res: Response) => {
+
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
     let blogId = req.body.blogId
     let blogName = req.body.blogName
-
-    const errors = []
-
-    if (!title || typeof title !== 'string' || !title.trim() || title.length > 30) {
-        errors.push({
-            message: "Incorrect title",
-            field: "title"
-        })
-    }
-    if (!shortDescription || typeof shortDescription !== 'string' || !shortDescription.trim() || shortDescription.length > 100) {
-        errors.push({
-            message: "Incorrect description",
-            field: "shortDescription"
-        })
-    }
-    if (!content || typeof content !== 'string' || !content.trim() || content.length > 1000) {
-        errors.push({
-            message: "Incorrect content",
-            field: "content"
-        })
-    }
-    if (!blogId || typeof blogId !== 'string' || !blogId.trim()) {
-        errors.push({
-            message: "Incorrect id",
-            field: "blogId"
-        })
-    }
-
-    if (errors.length) {
-        res.status(400).send({errorsMessages: errors})
-        return;
-    }
 
     const newPost = postsRepository.createPost(title, shortDescription, content, blogId, blogName)
     res.status(201).send(newPost)
@@ -57,50 +58,21 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
         res.status(200).send(foundPost)
     }
 })
-postsRouter.put('/:id', (req: Request, res: Response) => {
+postsRouter.put('/:id',
+    authValidationMiddleware,
+    titleValidation,
+    descriptionValidation,
+    contentValidation,
+    blogIdValidation,
+    blogNameValidation,
+    inputValidationMiddleware,
+    (req: Request, res: Response) => {
+
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
     let blogId = req.body.blogId
     let blogName = req.body.blogName
-
-    const errors = []
-
-    if (!title || typeof title !== 'string' || !title.trim() || title.length > 30) {
-        errors.push({
-            message: "Incorrect title",
-            field: "title"
-        })
-    }
-    if (!shortDescription || typeof shortDescription !== 'string' || !shortDescription.trim() || shortDescription.length > 100) {
-        errors.push({
-            message: "Incorrect description",
-            field: "shortDescription"
-        })
-    }
-    if (!content || typeof content !== 'string' || !content.trim() || content.length > 1000) {
-        errors.push({
-            message: "Incorrect content",
-            field: "content"
-        })
-    }
-    if (!blogId || typeof blogId !== 'string' || !blogId.trim()) {
-        errors.push({
-            message: "Incorrect id",
-            field: "blogId"
-        })
-    }
-    if (!blogName || typeof blogName !== 'string' || !blogId.trim()) {
-        errors.push({
-            message: "Incorrect id",
-            field: "blogId"
-        })
-    }
-
-    if (errors.length) {
-        res.status(400).send({errorsMessages: errors})
-        return;
-    }
 
     const isUpdated = postsRepository.updatePost(+req.params.id, title, shortDescription, content, blogId, blogName)
 
@@ -111,7 +83,9 @@ postsRouter.put('/:id', (req: Request, res: Response) => {
         res.sendStatus(404)
     }
 })
-postsRouter.delete('/:postId', (req: Request, res: Response) => {
+postsRouter.delete('/:postId',
+    authValidationMiddleware,
+    (req: Request, res: Response) => {
     const isDeleted = postsRepository.deletePost(+req.params.postId)
     if(isDeleted) {
         res.sendStatus(204)
