@@ -3,8 +3,8 @@ type PostsType = {
     title: string,
     shortDescription: string,
     content: string,
-    blogId: string | null,
-    blogName: string | null
+    blogId?: string | null,
+    blogName?: string | null
 }
 
 export let posts: PostsType[] = [
