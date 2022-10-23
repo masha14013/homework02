@@ -8,8 +8,6 @@ import {posts} from "./repositories/posts-repository";
 const app = express()
 const port = process.env.PORT || 5000
 
-
-
 app.use(bodyParser())
 
 app.get('/', (req: Request, res: Response) => {
