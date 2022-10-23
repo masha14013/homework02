@@ -35,7 +35,7 @@ blogsRouter.post('/',
 
     })
 blogsRouter.get('/:id', (req: Request, res: Response) => {
-    let foundBlog = blogsRepository.findBlogById(+req.params.id)
+    let foundBlog = blogsRepository.findBlogById(req.params.id)
     if (!foundBlog) {
         res.sendStatus(404)
     } else {
@@ -51,7 +51,7 @@ blogsRouter.put('/:id',
         let name = req.body.name
         let youtubeUrl = req.body.youtubeUrl
 
-        const id = +(req.params.id)
+        const id = req.params.id
 
         const isUpdated = blogsRepository.updateBlog(id, name, youtubeUrl)
 
@@ -65,7 +65,7 @@ blogsRouter.put('/:id',
 blogsRouter.delete('/:blogId',
     authValidationMiddleware,
     (req: Request, res: Response) => {
-    const id = +req.params.blogId
+    const id = req.params.blogId
     const isDeleted = blogsRepository.deleteBlog(id)
     if (isDeleted) {
         res.sendStatus(204)

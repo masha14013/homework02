@@ -51,7 +51,7 @@ postsRouter.post('/',
     res.status(201).send(newPost)
 })
 postsRouter.get('/:id', (req: Request, res: Response) => {
-    let foundPost = postsRepository.findPostById(+req.params.id)
+    let foundPost = postsRepository.findPostById(req.params.id)
     if (!foundPost) {
         res.sendStatus(404)
     } else {
@@ -74,10 +74,10 @@ postsRouter.put('/:id',
     let blogId = req.body.blogId
     let blogName = req.body.blogName
 
-    const isUpdated = postsRepository.updatePost(+req.params.id, title, shortDescription, content, blogId, blogName)
+    const isUpdated = postsRepository.updatePost(req.params.id, title, shortDescription, content, blogId, blogName)
 
     if (isUpdated) {
-        const post = postsRepository.findPostById(+req.params.id)
+        const post = postsRepository.findPostById(req.params.id)
         res.status(204).send(post)
     } else {
         res.sendStatus(404)
@@ -86,7 +86,7 @@ postsRouter.put('/:id',
 postsRouter.delete('/:postId',
     authValidationMiddleware,
     (req: Request, res: Response) => {
-    const isDeleted = postsRepository.deletePost(+req.params.postId)
+    const isDeleted = postsRepository.deletePost(req.params.postId)
     if(isDeleted) {
         res.sendStatus(204)
     } else {
