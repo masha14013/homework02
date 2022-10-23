@@ -1,12 +1,12 @@
 type BlogsType = {
-    id: number,
+    id: string,
     name: string,
     youtubeUrl: string
 }
 
 export let blogs: BlogsType[] = [
     {
-        id: +(new Date().getTime()),
+        id: String(new Date().getTime()),
         name: "Blogger A",
         youtubeUrl: "https://www.bloggerA.com"
     }
@@ -19,7 +19,7 @@ export const blogsRepository = {
     createBlog(name: string, youtubeUrl: string) {
 
         const newBlog = {
-            id: +(new Date()),
+            id: String(new Date()),
             name: name,
             youtubeUrl: youtubeUrl
         }
@@ -27,13 +27,13 @@ export const blogsRepository = {
         return newBlog;
 
     },
-    findBlogById(id: number) {
+    findBlogById(id: string) {
         let blog = blogs.find(b => b.id === id)
         return blog;
     },
-    updateBlog(id: number, name: string, youtubeUrl: string) {
+    updateBlog(id: string, name: string, youtubeUrl: string) {
 
-        let blog = blogs.find(b => b.id === +id)
+        let blog = blogs.find(b => b.id === id)
 
         if (!blog) {
             return false;
@@ -43,7 +43,7 @@ export const blogsRepository = {
             return true;
         }
     },
-    deleteBlog(id: number) {
+    deleteBlog(id: string) {
         const newBlogs = blogs.filter(b => b.id !== id)
         if (newBlogs.length < blogs.length) {
             blogs = newBlogs

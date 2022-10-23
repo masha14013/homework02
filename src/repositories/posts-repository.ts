@@ -1,5 +1,5 @@
 type PostsType = {
-    id: number,
+    id: string,
     title: string,
     shortDescription: string,
     content: string,
@@ -9,7 +9,7 @@ type PostsType = {
 
 export let posts: PostsType[] = [
     {
-        id: +(new Date().getTime()),
+        id: String(new Date().getTime()),
         title: "First Blog",
         shortDescription: "About content",
         content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -25,7 +25,7 @@ export const postsRepository = {
     createPost(title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
 
         const newPost = {
-            id: +(new Date()),
+            id: String(new Date()),
             title: title,
             shortDescription: shortDescription,
             content: content,
@@ -36,11 +36,11 @@ export const postsRepository = {
         return newPost;
 
     },
-    findPostById(id: number) {
+    findPostById(id: string) {
         let post = posts.find(p => p.id === id)
         return post;
     },
-    updatePost(id: number, title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
+    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
 
         let post = posts.find(p => p.id === id)
 
@@ -55,7 +55,7 @@ export const postsRepository = {
             return true;
         }
     },
-    deletePost(id: number) {
+    deletePost(id: string) {
         const newPosts = posts.filter(p => p.id !== id)
         if (newPosts.length < posts.length) {
             posts = newPosts
