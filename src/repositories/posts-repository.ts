@@ -3,8 +3,8 @@ type PostsType = {
     title: string,
     shortDescription: string,
     content: string,
-    blogId?: string | null,
-    blogName?: string | null
+    blogId: string,
+    blogName: string
 }
 
 export let posts: PostsType[] = [
@@ -22,7 +22,7 @@ export const postsRepository = {
     findPosts() {
         return posts;
     },
-    createPost(title: string, shortDescription: string, content: string, blogId: string | null, blogName: string | null) {
+    createPost(title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
 
         const newPost = {
             id: String(new Date()),
@@ -40,7 +40,7 @@ export const postsRepository = {
         let post = posts.find(p => p.id === id)
         return post;
     },
-    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string | null, blogName: string | null) {
+    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
 
         let post = posts.find(p => p.id === id)
 
