@@ -4,7 +4,7 @@ type BlogsType = {
     youtubeUrl: string
 }
 
-let blogs: BlogsType[] = [
+export let blogs: BlogsType[] = [
     {
         id: +(new Date().getTime()),
         name: "Blogger A",

@@ -7,7 +7,7 @@ type PostsType = {
     blogName: string
 }
 
-let posts: PostsType[] = [
+export let posts: PostsType[] = [
     {
         id: +(new Date().getTime()),
         title: "First Blog",
