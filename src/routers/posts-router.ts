@@ -71,9 +71,8 @@ postsRouter.put('/:id',
         let shortDescription = req.body.shortDescription
         let content = req.body.content
         let blogId = req.body.blogId
-        let blogName = req.body.blogName
 
-        const isUpdated = postsRepository.updatePost(req.params.id, title, shortDescription, content, blogId, blogName)
+        const isUpdated = postsRepository.updatePost(req.params.id, title, shortDescription, content, blogId)
 
         if (isUpdated) {
             const post = postsRepository.findPostById(req.params.id)
