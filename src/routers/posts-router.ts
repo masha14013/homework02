@@ -18,14 +18,14 @@ const contentValidation = body('content').isString().trim().isLength({
     min: 3,
     max: 1000
 }).withMessage('Content length should be from 3 to 1000 symbols')
-const blogIdValidation = body('blogId').isString().trim().isLength({
+/*const blogIdValidation = body('blogId').isString().trim().isLength({
     min: 1,
     max: 30
 }).withMessage('Id length should be from 1 to 30 symbols')
 const blogNameValidation = body('blogName').isString().trim().isLength({
     min: 3,
     max: 30
-}).withMessage('Blog name should be from 3 to 30 symbols')
+}).withMessage('Blog name should be from 3 to 30 symbols')*/
 
 postsRouter.get('/', (req: Request, res: Response) => {
     const foundPosts = postsRepository.findPosts()
@@ -36,8 +36,8 @@ postsRouter.post('/',
     titleValidation,
     descriptionValidation,
     contentValidation,
-    blogIdValidation,
-    blogNameValidation,
+    /*blogIdValidation,
+    /*blogNameValidation,*/
     inputValidationMiddleware,
     (req: Request, res: Response) => {
 
@@ -63,8 +63,8 @@ postsRouter.put('/:id',
     titleValidation,
     descriptionValidation,
     contentValidation,
-    blogIdValidation,
-    blogNameValidation,
+    /*blogIdValidation,
+    blogNameValidation,*/
     inputValidationMiddleware,
     (req: Request, res: Response) => {
 
