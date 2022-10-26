@@ -2,8 +2,9 @@ import express, {Request, Response} from 'express'
 import {postsRouter} from "./routers/posts-router";
 import {blogsRouter} from "./routers/blogs-router";
 import bodyParser from "body-parser";
-import {blogs} from "./repositories/blogs-repository";
+import {blogs} from "./repositories/blogs-in-memory-repository";
 import {posts} from "./repositories/posts-repository";
+import {runDb} from "./repositories/db";
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -26,7 +27,11 @@ app.delete('/testing/all-data', (req: Request, res: Response) => {
     }
 })
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+const startApp = async () => {
+    await runDb()
+    app.listen(port, () => {
+        console.log(`Example app listening on port ${port}`)
+    })
+}
 
+startApp()

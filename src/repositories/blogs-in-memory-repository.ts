@@ -13,10 +13,10 @@ export let blogs: BlogsType[] = [
 ]
 
 export const blogsRepository = {
-    findBlogs() {
+    async findBlogs() {
         return blogs;
     },
-    createBlog(name: string, youtubeUrl: string) {
+    async createBlog(name: string, youtubeUrl: string) {
 
         const newBlog = {
             id: (+(new Date())).toString(),
@@ -27,11 +27,11 @@ export const blogsRepository = {
         return newBlog;
 
     },
-    findBlogById(id: string) {
+    async findBlogById(id: string) {
         let blog = blogs.find(b => b.id === id)
         return blog;
     },
-    updateBlog(id: string, name: string, youtubeUrl: string) {
+    async updateBlog(id: string, name: string, youtubeUrl: string) {
 
         let blog = blogs.find(b => b.id === id)
 
