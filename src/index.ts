@@ -18,17 +18,16 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/posts', postsRouter)
 app.use('/blogs', blogsRouter)
 
-app.delete('/testing/all-data', (req: Request, res: Response) => {
-    let resultBlogsDeleted = blogs.splice(0, blogs.length - 1)
-    let resultPostsDeleted = posts.splice(0, posts.length - 1)
-    if (resultBlogsDeleted && resultPostsDeleted) {
-        res.sendStatus(204)
-        return;
-    }
-})
-
 const startApp = async () => {
     await runDb()
+    app.delete('/testing/all-data', (req: Request, res: Response) => {
+        let resultBlogsDeleted = blogs.splice(0, blogs.length - 1)
+        let resultPostsDeleted = posts.splice(0, posts.length - 1)
+        if (resultBlogsDeleted && resultPostsDeleted) {
+            res.sendStatus(204)
+            return;
+        }
+    })
     app.listen(port, () => {
         console.log(`Example app listening on port ${port}`)
     })
