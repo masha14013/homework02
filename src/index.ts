@@ -16,14 +16,14 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/posts', postsRouter)
 app.use('/blogs', blogsRouter)
 
-app.delete('/testing/all-data', async (req: Request, res: Response) => {
+/*app.delete('/testing/all-data', async (req: Request, res: Response) => {
     let resultBlogsDeleted = await blogsCollection.deleteMany({})
     let resultPostsDeleted = await postsCollection.deleteMany({})
     if (resultBlogsDeleted.deletedCount === 1 && resultPostsDeleted.deletedCount === 1) {
         res.sendStatus(204)
         return;
     }
-})
+})*/
 
 const startApp = async () => {
     await runDb()
