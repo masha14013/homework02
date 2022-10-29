@@ -7,7 +7,8 @@ export type PostsType = {
     shortDescription: string,
     content: string,
     blogId: string,
-    blogName: string | null
+    blogName: string | null,
+    createdAt: string
 }
 
 /*export let posts: PostsType[] = [
@@ -34,7 +35,8 @@ export const postsRepository = {
                 shortDescription: shortDescription,
                 content: content,
                 blogId: blog.id,
-                blogName: blog.name
+                blogName: blog.name,
+                createdAt: new Date().toISOString()
             }
             await postsCollection.insertOne(newPost)
             return newPost;

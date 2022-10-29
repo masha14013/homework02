@@ -3,16 +3,17 @@ import {blogsCollection} from "./db";
 export type BlogsType = {
     id: string,
     name: string,
-    youtubeUrl: string
+    youtubeUrl: string,
+    createdAt: string
 }
 
-export let blogs: BlogsType[] = [
+/*export let blogs: BlogsType[] = [
     {
         id: String(new Date().getTime()),
         name: "Blogger A",
         youtubeUrl: "https://www.bloggerA.com"
     }
-]
+]*/
 
 export const blogsRepository = {
     async findBlogs(): Promise<BlogsType[]> {
@@ -23,7 +24,8 @@ export const blogsRepository = {
         const newBlog: BlogsType = {
             id: (+(new Date())).toString(),
             name: name,
-            youtubeUrl: youtubeUrl
+            youtubeUrl: youtubeUrl,
+            createdAt: new Date().toISOString()
         }
         await blogsCollection.insertOne(newBlog)
         return newBlog;
