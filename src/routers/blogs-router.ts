@@ -31,8 +31,11 @@ blogsRouter.post('/',
         let youtubeUrl = req.body.youtubeUrl
 
         const newBlog = await blogsRepository.createBlog(name, youtubeUrl)
-        res.status(201).send(newBlog)
-
+        if (!newBlog) {
+            res.sendStatus(400)
+        } else {
+            res.status(201).send(newBlog)
+        }
     })
 blogsRouter.get('/:id', async (req: Request, res: Response) => {
     let foundBlog = await blogsRepository.findBlogById(req.params.id)
@@ -42,7 +45,7 @@ blogsRouter.get('/:id', async (req: Request, res: Response) => {
         res.status(200).send(foundBlog)
     }
 })
-blogsRouter.put('/:id',
+blogsRouter.put('/:blogId',
     authValidationMiddleware,
     nameValidation,
     urlValidation,
@@ -51,7 +54,7 @@ blogsRouter.put('/:id',
         let name = req.body.name
         let youtubeUrl = req.body.youtubeUrl
 
-        const id = req.params.id
+        const id = req.params.blogId
 
         const isUpdated = await blogsRepository.updateBlog(id, name, youtubeUrl)
 

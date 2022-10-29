@@ -1,6 +1,6 @@
 import {blogsCollection} from "./db";
 
-type BlogsType = {
+export type BlogsType = {
     id: string,
     name: string,
     youtubeUrl: string
@@ -15,36 +15,36 @@ export let blogs: BlogsType[] = [
 ]
 
 export const blogsRepository = {
-    async findBlogs() {
-        return await blogsCollection.find({}).toArray();
+    async findBlogs(): Promise<BlogsType[]> {
+        return blogsCollection.find({} ).toArray();
     },
-    async createBlog(name: string, youtubeUrl: string) {
+    async createBlog(name: string, youtubeUrl: string): Promise<BlogsType> {
 
-        const newBlog = {
+        const newBlog: BlogsType = {
             id: (+(new Date())).toString(),
             name: name,
             youtubeUrl: youtubeUrl
         }
-        const result = await blogsCollection.insertOne(newBlog)
+        await blogsCollection.insertOne(newBlog)
         return newBlog;
 
     },
-    async findBlogById(id: string) {
+    async findBlogById(id: string): Promise<BlogsType | null> {
         return await blogsCollection.findOne({id: id})
     },
-    async updateBlog(id: string, name: string, youtubeUrl: string) {
+    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
 
-        let result = await blogsCollection.updateOne({id: id}, {
+        const result = await blogsCollection.updateOne({id: id}, {
             $set: {
                 name: name,
                 youtubeUrl: youtubeUrl
             }
         })
 
-        return result.matchedCount !== 0
+        return result.matchedCount === 1
     },
-    async deleteBlog(id: string) {
+    async deleteBlog(id: string): Promise<boolean> {
         const result = await blogsCollection.deleteOne({id: id})
-        return result.deletedCount !== 0
+        return result.deletedCount === 1
     }
 }

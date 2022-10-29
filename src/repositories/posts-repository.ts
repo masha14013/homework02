@@ -1,15 +1,16 @@
-import {blogs} from "./blogs-in-memory-repository";
+import {blogsCollection, postsCollection} from "./db";
+import {BlogsType} from "./blogs-db-repository";
 
-type PostsType = {
-    id: string,
+export type PostsType = {
+    id: string | null,
     title: string,
     shortDescription: string,
     content: string,
-    blogId: string | null,
+    blogId: string,
     blogName: string | null
 }
 
-export let posts: PostsType[] = [
+/*export let posts: PostsType[] = [
     {
         id: String(new Date().getTime()),
         title: "First Blog",
@@ -18,54 +19,53 @@ export let posts: PostsType[] = [
         blogId: "33",
         blogName: "Name of the blog"
     }
-];
+];*/
 
 export const postsRepository = {
-    findPosts() {
-        return posts;
+    async findPosts(): Promise<PostsType[]> {
+        return await postsCollection.find({}).toArray();
     },
-    createPost (title: string, shortDescription: string, content: string, blogId: string) {
-        const blog = blogs.find(b => b.id === blogId)
+    async createPost (title: string, shortDescription: string, content: string, blogId: string): Promise<PostsType | undefined> {
+        const blog: BlogsType | null = await blogsCollection.findOne({id: blogId})
         if (blog) {
-            const newPost = {
+            const newPost: PostsType = {
                 id: (+(new Date())).toString(),
                 title: title,
                 shortDescription: shortDescription,
                 content: content,
-                blogId: blogId,
+                blogId: blog.id,
                 blogName: blog.name
             }
-            posts.push(newPost)
+            await postsCollection.insertOne(newPost)
             return newPost;
         }
     },
-    findPostById(id: string) {
-        let post = posts.find(p => p.id === id)
-        return post;
+    async findPostById (id: string): Promise<PostsType | null> {
+        return await postsCollection.findOne({id: id})
     },
-    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
-        const blog = blogs.find(b => b.id === blogId)
-        if (!blog) return  false
+    async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
+        const blog = await blogsCollection.findOne({id: blogId})
+        if (!blog) return false
 
-        let post = posts.find(p => p.id === id)
+        let post = await postsCollection.findOne({id: id})
         if (!post) {
             return false;
         } else {
-            post.title = title
-            post.shortDescription = shortDescription
-            post.content = content
-            post.blogId = blogId
-            post.blogName = blog.name
-            return true;
+            const result = await postsCollection.updateOne({id: id}, {
+                $set: {
+                    title: title,
+                    shortDescription: shortDescription,
+                    content: content,
+                    blogId: blog.id,
+                    blogName: blog.name
+                }
+            })
+            return result.matchedCount === 1
         }
     },
-    deletePost(id: string) {
-        const newPosts = posts.filter(p => p.id !== id)
-        if (newPosts.length < posts.length) {
-            posts = newPosts
-            return true;
-        } else {
-            return false;
-        }
+    async deletePost(id: string): Promise<boolean> {
+        const result = await postsCollection.deleteOne({id: id})
+        return result.deletedCount === 1
+
     }
 }
