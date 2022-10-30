@@ -17,13 +17,9 @@ app.use('/posts', postsRouter)
 app.use('/blogs', blogsRouter)
 
 app.delete('/testing/all-data', async (req: Request, res: Response) => {
-    let resultBlogsDeleted = await blogsCollection.deleteMany({})
-    let resultPostsDeleted = await postsCollection.deleteMany({})
-    if (resultBlogsDeleted.deletedCount === 1 && resultPostsDeleted.deletedCount === 1) {
-        res.sendStatus(204)
-    } else {
-        res.sendStatus(404)
-    }
+    await blogsCollection.deleteMany({})
+    await postsCollection.deleteMany({})
+    res.sendStatus(204)
 })
 
 const startApp = async () => {
