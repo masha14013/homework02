@@ -17,7 +17,7 @@ export type BlogsType = {
 
 export const blogsRepository = {
     async findBlogs(): Promise<BlogsType[]> {
-        return blogsCollection.find({} ).toArray();
+        return blogsCollection.find({}, {projection: {_id: 0}} ).toArray();
     },
     async createBlog(name: string, youtubeUrl: string): Promise<BlogsType> {
 
@@ -33,7 +33,7 @@ export const blogsRepository = {
 
     },
     async findBlogById(id: string): Promise<BlogsType | null> {
-        return await blogsCollection.findOne({id: id})
+        return await blogsCollection.findOne({id: id}, {projection: {_id: 0}})
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
 

@@ -24,7 +24,7 @@ export type PostsType = {
 
 export const postsRepository = {
     async findPosts(): Promise<PostsType[]> {
-        return await postsCollection.find({}).toArray();
+        return await postsCollection.find({}, {projection: {_id: 0}}).toArray();
     },
     async createPost (title: string, shortDescription: string, content: string, blogId: string): Promise<PostsType | undefined> {
         const blog: BlogsType | null = await blogsCollection.findOne({id: blogId})
@@ -44,7 +44,7 @@ export const postsRepository = {
         }
     },
     async findPostById (id: string): Promise<PostsType | null> {
-        return await postsCollection.findOne({id: id})
+        return await postsCollection.findOne({id: id}, {projection: {_id: 0}})
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
         const blog = await blogsCollection.findOne({id: blogId})
