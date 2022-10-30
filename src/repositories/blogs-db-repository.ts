@@ -40,8 +40,7 @@ export const blogsRepository = {
         const result = await blogsCollection.updateOne({id: id}, {
             $set: {
                 name: name,
-                youtubeUrl: youtubeUrl,
-                createdAt: new Date().toISOString()
+                youtubeUrl: youtubeUrl
             }
         })
 

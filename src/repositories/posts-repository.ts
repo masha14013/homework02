@@ -60,8 +60,7 @@ export const postsRepository = {
                     shortDescription: shortDescription,
                     content: content,
                     blogId: blog.id,
-                    blogName: blog.name,
-                    createdAt: new Date().toISOString()
+                    blogName: blog.name
                 }
             })
             return result.matchedCount === 1
