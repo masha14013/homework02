@@ -38,8 +38,9 @@ export const postsRepository = {
                 blogName: blog.name,
                 createdAt: new Date().toISOString()
             }
+            const newPostWithoutId: PostsType = Object.assign({}, newPost)
             await postsCollection.insertOne(newPost)
-            return newPost;
+            return newPostWithoutId;
         }
     },
     async findPostById (id: string): Promise<PostsType | null> {

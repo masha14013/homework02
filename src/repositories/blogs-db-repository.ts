@@ -27,8 +27,9 @@ export const blogsRepository = {
             youtubeUrl: youtubeUrl,
             createdAt: new Date().toISOString()
         }
+        const newBlogWithoutId: BlogsType = Object.assign({}, newBlog)
         await blogsCollection.insertOne(newBlog)
-        return newBlog;
+        return newBlogWithoutId;
 
     },
     async findBlogById(id: string): Promise<BlogsType | null> {
