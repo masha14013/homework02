@@ -1,13 +1,14 @@
+import dotenv from 'dotenv'
+dotenv.config()
 import express, {Request, Response} from 'express'
 import {postsRouter} from "./routers/posts-router";
 import {blogsRouter} from "./routers/blogs-router";
-import bodyParser from "body-parser";
 import {blogsCollection, postsCollection, runDb} from "./repositories/db";
 
 const app = express()
 const port = process.env.PORT || 5000
 
-app.use(bodyParser())
+app.use(express.json())
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World!')

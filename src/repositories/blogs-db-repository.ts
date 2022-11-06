@@ -1,39 +1,10 @@
-import {blogsCollection} from "./db";
-
-export type BlogsType = {
-    id: string,
-    name: string,
-    youtubeUrl: string,
-    createdAt: string
-}
-
-/*export let blogs: BlogsType[] = [
-    {
-        id: String(new Date().getTime()),
-        name: "Blogger A",
-        youtubeUrl: "https://www.bloggerA.com"
-    }
-]*/
+import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
 
 export const blogsRepository = {
-    async findBlogs(): Promise<BlogsType[]> {
-        return blogsCollection.find({}, {projection: {_id: 0}} ).toArray();
-    },
-    async createBlog(name: string, youtubeUrl: string): Promise<BlogsType> {
-
-        const newBlog: BlogsType = {
-            id: (+(new Date())).toString(),
-            name: name,
-            youtubeUrl: youtubeUrl,
-            createdAt: new Date().toISOString()
-        }
+    async createBlog(newBlog: BlogsType): Promise<BlogsType> {
         const newBlogWithoutId: BlogsType = Object.assign({}, newBlog)
         await blogsCollection.insertOne(newBlog)
         return newBlogWithoutId;
-
-    },
-    async findBlogById(id: string): Promise<BlogsType | null> {
-        return await blogsCollection.findOne({id: id}, {projection: {_id: 0}})
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
 
@@ -49,5 +20,22 @@ export const blogsRepository = {
     async deleteBlog(id: string): Promise<boolean> {
         const result = await blogsCollection.deleteOne({id: id})
         return result.deletedCount === 1
+    },
+    async createPostForSpecificBlog(title: string, shortDescription: string, content: string, blogId: string): Promise<PostsType | undefined> {
+        const blog: BlogsType | null = await blogsCollection.findOne({id: blogId})
+        if (blog) {
+            const newPost: PostsType = {
+                id: (+(new Date())).toString(),
+                title: title,
+                shortDescription: shortDescription,
+                content: content,
+                blogId: blog.id,
+                blogName: blog.name,
+                createdAt: new Date().toISOString()
+            }
+            const newPostWithoutId: PostsType = Object.assign({}, newPost)
+            await postsCollection.insertOne(newPost)
+            return newPostWithoutId;
+        }
     }
 }

@@ -1,47 +1,10 @@
-import {blogsCollection, postsCollection} from "./db";
-import {BlogsType} from "./blogs-db-repository";
-
-export type PostsType = {
-    id: string | null,
-    title: string,
-    shortDescription: string,
-    content: string,
-    blogId: string,
-    blogName: string | null,
-    createdAt: string
-}
-
-/*export let posts: PostsType[] = [
-    {
-        id: String(new Date().getTime()),
-        title: "First Blog",
-        shortDescription: "About content",
-        content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        blogId: "33",
-        blogName: "Name of the blog"
-    }
-];*/
+import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
 
 export const postsRepository = {
-    async findPosts(): Promise<PostsType[]> {
-        return await postsCollection.find({}, {projection: {_id: 0}}).toArray();
-    },
-    async createPost (title: string, shortDescription: string, content: string, blogId: string): Promise<PostsType | undefined> {
-        const blog: BlogsType | null = await blogsCollection.findOne({id: blogId})
-        if (blog) {
-            const newPost: PostsType = {
-                id: (+(new Date())).toString(),
-                title: title,
-                shortDescription: shortDescription,
-                content: content,
-                blogId: blog.id,
-                blogName: blog.name,
-                createdAt: new Date().toISOString()
-            }
-            const newPostWithoutId: PostsType = Object.assign({}, newPost)
-            await postsCollection.insertOne(newPost)
-            return newPostWithoutId;
-        }
+    async createPost (newPost: PostsType): Promise<PostsType | undefined> {
+        const newPostWithoutId: PostsType = Object.assign({}, newPost)
+        await postsCollection.insertOne(newPost)
+        return newPostWithoutId;
     },
     async findPostById (id: string): Promise<PostsType | null> {
         return await postsCollection.findOne({id: id}, {projection: {_id: 0}})

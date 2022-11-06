@@ -1,6 +1,4 @@
 import {MongoClient} from "mongodb";
-import {BlogsType} from "./blogs-db-repository";
-import {PostsType} from "./posts-repository";
 
 const mongoUri = process.env.MONGO_URI || "mongodb://0.0.0.0:27017";
 
@@ -10,7 +8,37 @@ const db = client.db("blogs")
 export const blogsCollection = db.collection<BlogsType>("blogs")
 export const postsCollection = db.collection<PostsType>("posts")
 
-export async function runDb () {
+export type BlogsType = {
+    id: string,
+    name: string,
+    youtubeUrl: string,
+    createdAt: string
+}
+export type PostsType = {
+    id: string | null,
+    title: string,
+    shortDescription: string,
+    content: string,
+    blogId: string,
+    blogName: string | null,
+    createdAt: string
+}
+export type BlogsQueryType = {
+    searchNameTerm: null,
+    pageNumber: string,
+    pageSize: string,
+    sortBy: string,
+    sortDirection: string
+}
+export type PostsQueryType = {
+    searchNameTerm: null,
+    pageNumber: string,
+    pageSize: string,
+    sortBy: string,
+    sortDirection: string
+}
+
+export async function runDb() {
     try {
         // Connect the client to the server
         await client.connect();
