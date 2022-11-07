@@ -5,7 +5,7 @@ import {postsRouter} from "./routers/posts-router";
 import {blogsRouter} from "./routers/blogs-router";
 import {blogsCollection, postsCollection, runDb} from "./repositories/db";
 
-const app = express()
+export const app = express()
 const port = process.env.PORT || 5000
 
 app.use(express.json())
