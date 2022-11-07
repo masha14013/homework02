@@ -5,6 +5,7 @@ import {inputValidationMiddleware} from "../middlewares/input-validation-middlew
 import {authValidationMiddleware} from "../middlewares/auth-validation-middleware";
 import {BlogsType, PostsType, BlogsQueryType, PostsQueryType} from "../repositories/db";
 import {blogsGetRepository} from "../repositories/blogs-get-repository";
+import {postsGetRepository} from "../repositories/posts-get-repository";
 
 export const blogsRouter = Router({})
 
@@ -128,9 +129,17 @@ blogsRouter.get('/:blogId/posts', async (req: Request<{blogId: string}, {}, {}, 
     }
 
     const foundPosts: PostsType[] = await blogsGetRepository.findPostsForSpecificBlog(req.params.blogId, pageNumber, pageSize, sortBy, sortDirectionNumber)
+    let foundPostsTotalCount = await postsGetRepository.findPostsTotalCount()
+    let foundPostsFull = {
+        pagesCount: Math.ceil(foundPostsTotalCount / pageSize),
+        page: pageNumber,
+        pageSize: pageSize,
+        totalCount: foundPostsTotalCount,
+        items: foundPosts
+    }
     if (!foundPosts) {
         res.sendStatus(404)
     } else {
-        res.status(200).send(foundPosts)
+        res.status(200).send(foundPostsFull)
     }
 })
