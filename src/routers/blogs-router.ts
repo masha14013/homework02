@@ -7,6 +7,32 @@ import {BlogsType, PostsType, BlogsQueryType, PostsQueryType} from "../repositor
 import {blogsGetRepository} from "../repositories/blogs-get-repository";
 import {postsGetRepository} from "../repositories/posts-get-repository";
 
+const queryParamsParser = (query: {pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
+    let pageNumber = query.pageNumber && typeof query.pageNumber === 'string' ? +query.pageNumber : 1 //undefined  = NuN
+    let pageSize = query.pageSize && typeof query.pageSize === 'string' ? +query.pageSize : 10
+    let sortBy = query.sortBy && typeof query.sortBy === 'string' ? query.pageSize : 'createdAt'
+    /*let sortDirection = query.sortDirection && typeof query.sortDirection === 'string' ? query.sortDirection : 'desc'*/
+    let sortDirectionNumber = 0
+
+    if (query.sortDirection && typeof query.sortDirection === 'string') {
+
+        if (query.sortDirection === 'asc') {
+            sortDirectionNumber = 1
+        } else if (query.sortDirection === 'desc') {
+            sortDirectionNumber = -1
+        }
+    } else {
+        sortDirectionNumber = -1
+    }
+
+    return {
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirectionNumber // -1 | 1
+    }
+}
+
 export const blogsRouter = Router({})
 
 const nameValidation = body('name').isString().trim().isLength({
@@ -20,22 +46,14 @@ const urlValidation = body('youtubeUrl').isString().trim().isURL().isLength({
 }).withMessage('URL length should not exceed 100 symbols')
 
 blogsRouter.get('/', async (req: Request<{}, {}, {}, BlogsQueryType, {}>, res: Response) => {
-    let pageNumber = +req.query.pageNumber
-    let pageSize = +req.query.pageSize
-    let sortBy = req.query.sortBy
-    let sortDirection = req.query.sortDirection
+    const parsedQuery = queryParamsParser(req.query)
 
-    let sortDirectionNumber = 0
-    if (sortDirection === 'asc') {
-        sortDirectionNumber = 1
-    }
-
-    let foundBlogs: BlogsType[] = await blogsGetRepository.findBlogs(pageNumber, pageSize, sortBy, sortDirectionNumber)
+    let foundBlogs: BlogsType[] = await blogsGetRepository.findBlogs(parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirectionNumber)
     let foundBlogsTotalCount = await blogsGetRepository.findBlogsTotalCount()
     let foundBlogsFull = {
-        pagesCount: Math.ceil(foundBlogsTotalCount / pageSize),
-        page: pageNumber,
-        pageSize: pageSize,
+        pagesCount: Math.ceil(foundBlogsTotalCount / parsedQuery.pageSize),
+        page: parsedQuery.pageNumber,
+        pageSize: parsedQuery.pageSize,
         totalCount: foundBlogsTotalCount,
         items: foundBlogs
     }
@@ -118,30 +136,23 @@ blogsRouter.post('/:blogId/posts',
         }
     })
 blogsRouter.get('/:blogId/posts', async (req: Request<{ blogId: string }, {}, {}, PostsQueryType, {}>, res: Response) => {
-    let pageNumber = +req.query.pageNumber
-    let pageSize = +req.query.pageSize
-    let sortBy = req.query.sortBy
-    let sortDirection = req.query.sortDirection
-    let id = req.params.blogId
+    const parsedQuery = queryParamsParser(req.query)
 
-    let sortDirectionNumber = 0
-    if (sortDirection === 'asc') {
-        sortDirectionNumber = 1
-    }
+    let id = req.params.blogId
 
     let foundBlog = await blogsGetRepository.findBlogById(id)
     if (!foundBlog) {
         res.sendStatus(404)
     } else {
-        const foundPosts: PostsType[] = await blogsGetRepository.findPostsForSpecificBlog(id, pageNumber, pageSize, sortBy, sortDirectionNumber)
+        const foundPosts: PostsType[] = await blogsGetRepository.findPostsForSpecificBlog(id, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirectionNumber)
         if (!foundPosts) {
             res.sendStatus(404)
         } else {
             let foundPostsTotalCount = await postsGetRepository.findPostsTotalCount()
             let foundPostsFull = {
-                pagesCount: Math.ceil(foundPostsTotalCount / pageSize),
-                page: pageNumber,
-                pageSize: pageSize,
+                pagesCount: Math.ceil(foundPostsTotalCount / parsedQuery.pageSize),
+                page: parsedQuery.pageNumber,
+                pageSize: parsedQuery.pageSize,
                 totalCount: foundPostsTotalCount,
                 items: foundPosts
             }

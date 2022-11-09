@@ -7,6 +7,32 @@ import {PostsQueryType, PostsType} from "../repositories/db";
 import {postsGetRepository} from "../repositories/posts-get-repository";
 import {postsService} from "../domain/posts-service";
 
+const queryParamsParser = (query: {pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
+    let pageNumber = query.pageNumber && typeof query.pageNumber === 'string' ? +query.pageNumber : 1 //undefined  = NuN
+    let pageSize = query.pageSize && typeof query.pageSize === 'string' ? +query.pageSize : 10
+    let sortBy = query.sortBy && typeof query.sortBy === 'string' ? query.pageSize : 'createdAt'
+    /*let sortDirection = query.sortDirection && typeof query.sortDirection === 'string' ? query.sortDirection : 'desc'*/
+    let sortDirectionNumber = 0
+
+    if (query.sortDirection && typeof query.sortDirection === 'string') {
+
+        if (query.sortDirection === 'asc') {
+            sortDirectionNumber = 1
+        } else if (query.sortDirection === 'desc') {
+            sortDirectionNumber = -1
+        }
+    } else {
+        sortDirectionNumber = -1
+    }
+
+    return {
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirectionNumber // -1 | 1
+    }
+}
+
 export const postsRouter = Router({})
 
 const titleValidation = body('title').isString().trim().isLength({
@@ -27,22 +53,14 @@ const blogIdValidation = body('blogId').isString().trim().isLength({
 }).withMessage('Id length should be from 1 to 30 symbols')
 
 postsRouter.get('/', async (req: Request<{}, {}, {}, PostsQueryType, {}>, res: Response) => {
-    let pageNumber = +req.query.pageNumber
-    let pageSize = +req.query.pageSize
-    let sortBy = req.query.sortBy
-    let sortDirection = req.query.sortDirection
+    const parsedQuery = queryParamsParser(req.query)
 
-    let sortDirectionNumber = 0
-    if (sortDirection === 'asc') {
-        sortDirectionNumber = 1
-    }
-
-    let foundPosts: PostsType[] = await postsGetRepository.findPosts(pageNumber, pageSize, sortBy, sortDirectionNumber)
+    let foundPosts: PostsType[] = await postsGetRepository.findPosts(parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirectionNumber)
     let foundPostsTotalCount = await postsGetRepository.findPostsTotalCount()
     let foundPostsFull = {
-        pagesCount: Math.ceil(foundPostsTotalCount / pageSize),
-        page: pageNumber,
-        pageSize: pageSize,
+        pagesCount: Math.ceil(foundPostsTotalCount / parsedQuery.pageSize),
+        page: parsedQuery.pageNumber,
+        pageSize: parsedQuery.pageSize,
         totalCount: foundPostsTotalCount,
         items: foundPosts
     }
