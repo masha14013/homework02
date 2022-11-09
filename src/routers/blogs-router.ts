@@ -117,29 +117,36 @@ blogsRouter.post('/:blogId/posts',
             }
         }
     })
-blogsRouter.get('/:blogId/posts', async (req: Request<{blogId: string}, {}, {}, PostsQueryType, {}>, res: Response) => {
+blogsRouter.get('/:blogId/posts', async (req: Request<{ blogId: string }, {}, {}, PostsQueryType, {}>, res: Response) => {
     let pageNumber = +req.query.pageNumber
     let pageSize = +req.query.pageSize
     let sortBy = req.query.sortBy
     let sortDirection = req.query.sortDirection
+    let id = req.params.blogId
 
     let sortDirectionNumber = 0
     if (sortDirection === 'asc') {
         sortDirectionNumber = 1
     }
 
-    const foundPosts: PostsType[] = await blogsGetRepository.findPostsForSpecificBlog(req.params.blogId, pageNumber, pageSize, sortBy, sortDirectionNumber)
-    let foundPostsTotalCount = await postsGetRepository.findPostsTotalCount()
-    let foundPostsFull = {
-        pagesCount: Math.ceil(foundPostsTotalCount / pageSize),
-        page: pageNumber,
-        pageSize: pageSize,
-        totalCount: foundPostsTotalCount,
-        items: foundPosts
-    }
-    if (!foundPosts) {
+    let foundBlog = await blogsGetRepository.findBlogById(id)
+    if (!foundBlog) {
         res.sendStatus(404)
     } else {
-        res.status(200).send(foundPostsFull)
+        const foundPosts: PostsType[] = await blogsGetRepository.findPostsForSpecificBlog(id, pageNumber, pageSize, sortBy, sortDirectionNumber)
+        if (!foundPosts) {
+            res.sendStatus(404)
+        } else {
+            let foundPostsTotalCount = await postsGetRepository.findPostsTotalCount()
+            let foundPostsFull = {
+                pagesCount: Math.ceil(foundPostsTotalCount / pageSize),
+                page: pageNumber,
+                pageSize: pageSize,
+                totalCount: foundPostsTotalCount,
+                items: foundPosts
+            }
+            res.status(200).send(foundPostsFull)
+        }
     }
+
 })
