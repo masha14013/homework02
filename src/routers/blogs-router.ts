@@ -145,7 +145,7 @@ blogsRouter.get('/:blogId/posts', async (req: Request<{ blogId: string }, {}, {}
                 totalCount: foundPostsTotalCount,
                 items: foundPosts
             }
-            res.status(200).send(foundPostsFull);
+            res.status(200).send(foundPostsFull)
         }
     }
 
