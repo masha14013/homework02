@@ -1,11 +1,11 @@
 import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
 
 export const blogsGetRepository = {
-    async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirectionNumber: number): Promise<BlogsType[]> {
+    async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<BlogsType[]> {
         return await blogsCollection.find({}, {projection: {_id: 0}})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .sort( {[sortBy]: sortDirectionNumber ? 1 : -1} )
+            .sort( {[sortBy]: sortDirection} )
             .toArray()
     },
     async findBlogsTotalCount(): Promise<number> {
@@ -14,12 +14,12 @@ export const blogsGetRepository = {
     async findBlogById(id: string): Promise<BlogsType | null> {
         return await blogsCollection.findOne({id: id}, {projection: {_id: 0}})
     },
-    async findPostsForSpecificBlog(id: string, pageNumber: number, pageSize: number, sortBy: string, sortDirectionNumber: number): Promise<PostsType[]> {
+    async findPostsForSpecificBlog(id: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<PostsType[]> {
         return await postsCollection.find({blogId: id}, {projection: {_id: 0}})
 
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .sort({[sortBy]: sortDirectionNumber ? 1 : -1})
+            .sort({[sortBy]: sortDirection})
             .toArray();
     }
 }

@@ -1,11 +1,11 @@
 import {postsCollection, PostsType} from "./db";
 
 export const postsGetRepository = {
-    async findPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirectionNumber: number): Promise<PostsType[]> {
+    async findPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<PostsType[]> {
         return await postsCollection.find({}, {projection: {_id: 0}})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .sort({[sortBy]: sortDirectionNumber ? 1 : -1})
+            .sort({[sortBy]: sortDirection})
             .toArray();
     },
     async findPostsTotalCount(filter: Object): Promise<number> {
