@@ -3,10 +3,9 @@ import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
 export const blogsGetRepository = {
     async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirectionNumber: number): Promise<BlogsType[]> {
         return await blogsCollection.find({}, {projection: {_id: 0}})
-
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .sort( {[sortBy]: sortDirectionNumber?1:-1} )
+            .sort( {[sortBy]: sortDirectionNumber ? 1 : -1} )
             .toArray()
     },
     async findBlogsTotalCount(): Promise<number> {

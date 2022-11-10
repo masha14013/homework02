@@ -6,33 +6,7 @@ import {authValidationMiddleware} from "../middlewares/auth-validation-middlewar
 import {BlogsType, PostsType, BlogsQueryType, PostsQueryType} from "../repositories/db";
 import {blogsGetRepository} from "../repositories/blogs-get-repository";
 import {postsGetRepository} from "../repositories/posts-get-repository";
-import {contentValidation, descriptionValidation, titleValidation} from "./posts-router";
-
-const queryParamsParser = (query: {pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
-    let pageNumber = query.pageNumber && typeof query.pageNumber === 'string' ? +query.pageNumber : 1 //undefined  = NuN
-    let pageSize = query.pageSize && typeof query.pageSize === 'string' ? +query.pageSize : 10
-    let sortBy = query.sortBy && typeof query.sortBy === 'string' ? query.pageSize : 'createdAt'
-    /*let sortDirection = query.sortDirection && typeof query.sortDirection === 'string' ? query.sortDirection : 'desc'*/
-    let sortDirectionNumber = 0
-
-    if (query.sortDirection && typeof query.sortDirection === 'string') {
-
-        if (query.sortDirection === 'asc') {
-            sortDirectionNumber = 1
-        } else if (query.sortDirection === 'desc') {
-            sortDirectionNumber = -1
-        }
-    } else {
-        sortDirectionNumber = -1
-    }
-
-    return {
-        pageNumber,
-        pageSize,
-        sortBy,
-        sortDirectionNumber // -1 | 1
-    }
-}
+import {contentValidation, descriptionValidation, queryParamsParser, titleValidation} from "./posts-router";
 
 export const blogsRouter = Router({})
 
@@ -48,7 +22,8 @@ const urlValidation = body('youtubeUrl').isString().trim().isURL().isLength({
 blogsRouter.get('/', async (req: Request<{}, {}, {}, BlogsQueryType, {}>, res: Response) => {
     const parsedQuery = queryParamsParser(req.query)
 
-    let foundBlogs: BlogsType[] = await blogsGetRepository.findBlogs(parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirectionNumber)
+    let foundBlogs: BlogsType[] = await blogsGetRepository.findBlogs
+    (parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
     let foundBlogsTotalCount = await blogsGetRepository.findBlogsTotalCount()
     let foundBlogsFull = {
         pagesCount: Math.ceil(foundBlogsTotalCount / parsedQuery.pageSize),
@@ -148,11 +123,13 @@ blogsRouter.get('/:blogId/posts', async (req: Request<{ blogId: string }, {}, {}
     if (!foundBlog) {
         res.sendStatus(404)
     } else {
-        const foundPosts: PostsType[] = await blogsGetRepository.findPostsForSpecificBlog(id, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirectionNumber)
+        const foundPosts: PostsType[] = await blogsGetRepository.findPostsForSpecificBlog
+        (id, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
         if (!foundPosts) {
             res.sendStatus(404)
         } else {
-            let foundPostsTotalCount = await postsGetRepository.findPostsTotalCount()
+            let filter = {blogId: id}
+            let foundPostsTotalCount = await postsGetRepository.findPostsTotalCount(filter)
             let foundPostsFull = {
                 pagesCount: Math.ceil(foundPostsTotalCount / parsedQuery.pageSize),
                 page: parsedQuery.pageNumber,
