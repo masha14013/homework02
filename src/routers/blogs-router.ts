@@ -6,6 +6,7 @@ import {authValidationMiddleware} from "../middlewares/auth-validation-middlewar
 import {BlogsType, PostsType, BlogsQueryType, PostsQueryType} from "../repositories/db";
 import {blogsGetRepository} from "../repositories/blogs-get-repository";
 import {postsGetRepository} from "../repositories/posts-get-repository";
+import {contentValidation, descriptionValidation, titleValidation} from "./posts-router";
 
 const queryParamsParser = (query: {pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
     let pageNumber = query.pageNumber && typeof query.pageNumber === 'string' ? +query.pageNumber : 1 //undefined  = NuN
@@ -39,7 +40,6 @@ const nameValidation = body('name').isString().trim().isLength({
     min: 3,
     max: 15
 }).withMessage('Title length should be from 3 to 15 symbols')
-
 const urlValidation = body('youtubeUrl').isString().trim().isURL().isLength({
     min: 10,
     max: 100
@@ -117,6 +117,10 @@ blogsRouter.delete('/:blogId',
     })
 blogsRouter.post('/:blogId/posts',
     authValidationMiddleware,
+    titleValidation,
+    descriptionValidation,
+    contentValidation,
+    inputValidationMiddleware,
     async (req: Request, res: Response) => {
         let foundBlog = await blogsGetRepository.findBlogById(req.params.blogId)
         if (!foundBlog) {

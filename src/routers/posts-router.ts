@@ -35,15 +35,15 @@ const queryParamsParser = (query: {pageNumber: string, pageSize: string, sortBy:
 
 export const postsRouter = Router({})
 
-const titleValidation = body('title').isString().trim().isLength({
+export const titleValidation = body('title').isString().trim().isLength({
     min: 3,
     max: 30
 }).withMessage('Title length should be from 3 to 30 symbols')
-const descriptionValidation = body('shortDescription').isString().trim().isLength({
+export const descriptionValidation = body('shortDescription').isString().trim().isLength({
     min: 3,
     max: 100
 }).withMessage('Description length should be from 3 to 100 symbols')
-const contentValidation = body('content').isString().trim().isLength({
+export const contentValidation = body('content').isString().trim().isLength({
     min: 3,
     max: 1000
 }).withMessage('Content length should be from 3 to 1000 symbols')
