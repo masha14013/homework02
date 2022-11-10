@@ -11,7 +11,7 @@ export const queryParamsParser = (query: {pageNumber: string, pageSize: string, 
     let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1 //undefined  = NuN
     let pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10
     let sortBy = typeof query.sortBy === 'string' ? query.pageSize : 'createdAt'
-    let sortDirection = typeof query.sortDirection === 'string' ? +query.sortDirection : -1
+    let sortDirection = query.sortDirection === 'asc' ? 1 : -1
 
 
     return {

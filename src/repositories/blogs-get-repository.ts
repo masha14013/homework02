@@ -16,7 +16,6 @@ export const blogsGetRepository = {
     },
     async findPostsForSpecificBlog(id: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<PostsType[]> {
         return await postsCollection.find({blogId: id}, {projection: {_id: 0}})
-
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .sort({[sortBy]: sortDirection})
