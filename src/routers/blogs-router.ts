@@ -42,7 +42,7 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, BlogsQueryType, {}>, res: R
         (parsedQuery.searchNameTerm, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
     let foundBlogsTotalCount = await blogsGetRepository.findBlogsTotalCount()
     let foundBlogsFull = {
-        searchNameTerm: parsedQuery.searchNameTerm,
+        //searchNameTerm: parsedQuery.searchNameTerm,
         pagesCount: Math.ceil(foundBlogsTotalCount / parsedQuery.pageSize),
         page: parsedQuery.pageNumber,
         pageSize: parsedQuery.pageSize,
