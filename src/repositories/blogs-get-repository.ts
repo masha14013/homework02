@@ -3,7 +3,7 @@ import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
 export const blogsGetRepository = {
     async findBlogs(searchNameTerm: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<BlogsType[]> {
         let findFilter = {}
-        const pattern = `${searchNameTerm}`
+        const pattern = `${searchNameTerm}i`
         if (searchNameTerm !== null) {
             findFilter = {name: {$regex: pattern}}
         }
