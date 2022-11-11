@@ -37,10 +37,10 @@ const urlValidation = body('youtubeUrl').isString().trim().isURL().isLength({
 
 blogsRouter.get('/', async (req: Request<{}, {}, {}, BlogsQueryType, {}>, res: Response) => {
     const parsedQuery = queryParamsParser(req.query)
-
+    console.log(parsedQuery)
     let foundBlogs: BlogsType[] = await blogsGetRepository.findBlogs
         (parsedQuery.searchNameTerm, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
-    let foundBlogsTotalCount = await blogsGetRepository.findBlogsTotalCount()
+    let foundBlogsTotalCount = await blogsGetRepository.findBlogsTotalCount(parsedQuery.searchNameTerm)
     let foundBlogsFull = {
         pagesCount: Math.ceil(foundBlogsTotalCount / parsedQuery.pageSize),
         page: parsedQuery.pageNumber,
