@@ -6,7 +6,23 @@ import {authValidationMiddleware} from "../middlewares/auth-validation-middlewar
 import {BlogsType, PostsType, BlogsQueryType, PostsQueryType} from "../repositories/db";
 import {blogsGetRepository} from "../repositories/blogs-get-repository";
 import {postsGetRepository} from "../repositories/posts-get-repository";
-import {contentValidation, descriptionValidation, queryParamsParser, titleValidation} from "./posts-router";
+import {contentValidation, descriptionValidation, postsQueryParamsParser, titleValidation} from "./posts-router";
+
+export const queryParamsParser = (query: {searchNameTerm: string, pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
+    let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1 //undefined  = NuN
+    let pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10
+    let searchNameTerm = typeof query.searchNameTerm === 'string' ? query.searchNameTerm : ''
+    let sortBy = typeof query.sortBy === 'string' ? query.sortBy : 'createdAt'
+    let sortDirection = query.sortDirection === 'asc' ? 1 : -1
+
+    return {
+        searchNameTerm,
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection
+    }
+}
 
 export const blogsRouter = Router({})
 
@@ -23,9 +39,10 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, BlogsQueryType, {}>, res: R
     const parsedQuery = queryParamsParser(req.query)
 
     let foundBlogs: BlogsType[] = await blogsGetRepository.findBlogs
-    (parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
+        (parsedQuery.searchNameTerm, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
     let foundBlogsTotalCount = await blogsGetRepository.findBlogsTotalCount()
     let foundBlogsFull = {
+        searchNameTerm: parsedQuery.searchNameTerm,
         pagesCount: Math.ceil(foundBlogsTotalCount / parsedQuery.pageSize),
         page: parsedQuery.pageNumber,
         pageSize: parsedQuery.pageSize,
@@ -115,7 +132,7 @@ blogsRouter.post('/:blogId/posts',
         }
     })
 blogsRouter.get('/:blogId/posts', async (req: Request<{ blogId: string }, {}, {}, PostsQueryType, {}>, res: Response) => {
-    const parsedQuery = queryParamsParser(req.query)
+    const parsedQuery = postsQueryParamsParser(req.query)
 
     let id = req.params.blogId
 

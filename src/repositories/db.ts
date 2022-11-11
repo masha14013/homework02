@@ -24,14 +24,13 @@ export type PostsType = {
     createdAt: string
 }
 export type BlogsQueryType = {
-    searchNameTerm: null,
+    searchNameTerm: string,
     pageNumber: string,
     pageSize: string,
     sortBy: string,
     sortDirection: string
 }
 export type PostsQueryType = {
-    searchNameTerm: null,
     pageNumber: string,
     pageSize: string,
     sortBy: string,

@@ -7,18 +7,17 @@ import {PostsQueryType, PostsType} from "../repositories/db";
 import {postsGetRepository} from "../repositories/posts-get-repository";
 import {postsService} from "../domain/posts-service";
 
-export const queryParamsParser = (query: {pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
-    let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1 //undefined  = NuN
+export const postsQueryParamsParser = (query: {pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
+    let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1
     let pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10
     let sortBy = typeof query.sortBy === 'string' ? query.sortBy : 'createdAt'
     let sortDirection = query.sortDirection === 'asc' ? 1 : -1
-
 
     return {
         pageNumber,
         pageSize,
         sortBy,
-        sortDirection // -1 | 1
+        sortDirection
     }
 }
 
@@ -42,7 +41,7 @@ const blogIdValidation = body('blogId').isString().trim().isLength({
 }).withMessage('Id length should be from 1 to 30 symbols')
 
 postsRouter.get('/', async (req: Request<{}, {}, {}, PostsQueryType, {}>, res: Response) => {
-    const parsedQuery = queryParamsParser(req.query)
+    const parsedQuery = postsQueryParamsParser(req.query)
 
     let foundPosts: PostsType[] = await postsGetRepository.findPosts
     (parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)

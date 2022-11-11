@@ -1,8 +1,14 @@
 import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
 
 export const blogsGetRepository = {
-    async findBlogs(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<BlogsType[]> {
-        return await blogsCollection.find({}, {projection: {_id: 0}})
+    async findBlogs(searchNameTerm: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<BlogsType[]> {
+        let findFilter = {}
+        const pattern = `${searchNameTerm}`
+        if (searchNameTerm !== null) {
+            findFilter = {name: {$regex: pattern}}
+        }
+
+        return await blogsCollection.find(findFilter, {projection: {_id: 0}})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .sort( {[sortBy]: sortDirection} )
