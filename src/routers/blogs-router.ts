@@ -9,10 +9,10 @@ import {postsGetRepository} from "../repositories/posts-get-repository";
 import {contentValidation, descriptionValidation, postsQueryParamsParser, titleValidation} from "./posts-router";
 
 export const queryParamsParser = (query: {searchNameTerm: string, pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
-    let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1 //undefined  = NuN
-    let pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10
-    let searchNameTerm = typeof query.searchNameTerm === 'string' ? query.searchNameTerm : ''
-    let sortBy = typeof query.sortBy === 'string' ? query.sortBy : 'createdAt'
+    let pageNumber = +query.pageNumber || 1
+    let pageSize = +query.pageSize || 10
+    let searchNameTerm = query.searchNameTerm || ''
+    let sortBy = query.sortBy || 'createdAt'
     let sortDirection = query.sortDirection === 'asc' ? 1 : -1
 
     return {
@@ -42,7 +42,6 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, BlogsQueryType, {}>, res: R
         (parsedQuery.searchNameTerm, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
     let foundBlogsTotalCount = await blogsGetRepository.findBlogsTotalCount()
     let foundBlogsFull = {
-        //searchNameTerm: parsedQuery.searchNameTerm,
         pagesCount: Math.ceil(foundBlogsTotalCount / parsedQuery.pageSize),
         page: parsedQuery.pageNumber,
         pageSize: parsedQuery.pageSize,
