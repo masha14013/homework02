@@ -6,12 +6,13 @@ export const blogsRepository = {
         await blogsCollection.insertOne(newBlog)
         return newBlogWithoutId;
     },
-    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
 
         const result = await blogsCollection.updateOne({id: id}, {
             $set: {
                 name: name,
-                youtubeUrl: youtubeUrl
+                description: description,
+                websiteUrl: websiteUrl
             }
         })
 

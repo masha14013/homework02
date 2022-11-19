@@ -2,19 +2,20 @@ import {blogsRepository} from '../repositories/blogs-db-repository'
 import {BlogsType, PostsType} from "../repositories/db";
 
 export const blogsService = {
-    async createBlog(name: string, youtubeUrl: string): Promise<BlogsType> {
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType> {
         const newBlog: BlogsType =
             {
                 id: (+(new Date())).toString(),
                 name: name,
-                youtubeUrl: youtubeUrl,
+                description: description,
+                websiteUrl: websiteUrl,
                 createdAt: new Date().toISOString()
             }
         const createdBlog = await blogsRepository.createBlog(newBlog)
         return createdBlog;
     },
-    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
-        return await blogsRepository.updateBlog(id, name, youtubeUrl)
+    async updateBlog(id: string, name: string, websiteUrl: string): Promise<boolean> {
+        return await blogsRepository.updateBlog(id, name, websiteUrl)
     },
     async deleteBlog(id: string): Promise<boolean> {
         return await blogsRepository.deleteBlog(id)
