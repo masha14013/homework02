@@ -84,10 +84,11 @@ blogsRouter.put('/:blogId',
     async (req: Request, res: Response) => {
         let name = req.body.name
         let websiteUrl = req.body.websiteUrl
+        let description = req.body.description
 
         const id = req.params.blogId
 
-        const isUpdated = await blogsService.updateBlog(id, name, websiteUrl)
+        const isUpdated = await blogsService.updateBlog(id, name, description, websiteUrl)
 
         if (isUpdated) {
             const blog = await blogsGetRepository.findBlogById(id)
