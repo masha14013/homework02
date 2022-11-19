@@ -30,7 +30,7 @@ const nameValidation = body('name').isString().trim().isLength({
     min: 3,
     max: 15
 }).withMessage('Title length should be from 3 to 15 symbols')
-const urlValidation = body('youtubeUrl').isString().trim().isURL().isLength({
+const urlValidation = body('websiteUrl').isString().trim().isURL().isLength({
     min: 10,
     max: 100
 }).withMessage('URL length should not exceed 100 symbols')
