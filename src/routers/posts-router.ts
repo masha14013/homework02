@@ -3,9 +3,10 @@ import {postsRepository} from "../repositories/posts-repository";
 import {body} from "express-validator";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {authValidationMiddleware} from "../middlewares/auth-validation-middleware";
-import {PostsQueryType, PostsType} from "../repositories/db";
+import {BlogsType, PostsQueryType, PostsType} from "../repositories/db";
 import {postsGetRepository} from "../repositories/posts-get-repository";
 import {postsService} from "../domain/posts-service";
+import {blogsGetRepository} from "../repositories/blogs-get-repository";
 
 export const postsQueryParamsParser = (query: {pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
     let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1

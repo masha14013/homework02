@@ -1,6 +1,7 @@
-import {postsCollection, PostsType} from "./db";
+import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
 
 export const postsGetRepository = {
+
     async findPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<PostsType[]> {
         return await postsCollection.find({}, {projection: {_id: 0}})
             .skip((pageNumber - 1) * pageSize)

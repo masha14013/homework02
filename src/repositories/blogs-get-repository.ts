@@ -3,8 +3,8 @@ import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
 export const blogsGetRepository = {
 
     async findBlogs(searchNameTerm: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<BlogsType[]> {
-           const findFilter = {name: {$regex: searchNameTerm ?? '', $options: "i"}}
 
+        const findFilter = {name: {$regex: searchNameTerm ?? '', $options: "i"}}
 
         return await blogsCollection.find(findFilter, {projection: {_id: 0}})
             .skip((pageNumber - 1) * pageSize)
@@ -13,7 +13,9 @@ export const blogsGetRepository = {
             .toArray()
     },
     async findBlogsTotalCount(searchNameTerm: string): Promise<number> {
+
         const findFilter = {name: {$regex: searchNameTerm ?? '', $options: "i"}}
+
         return blogsCollection.countDocuments(findFilter)
     },
     async findBlogById(id: string): Promise<BlogsType | null> {
