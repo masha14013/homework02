@@ -1,15 +1,10 @@
 {
   "version": 2,
+  "name": "homework02",
   "builds": [
-    {
-      "src": "dist/index.js",
-      "use": "@vercel/node"
-    }
+    { "src": "./index.js", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
+    { "src": "/(.*)", "dest": "/index.js" }
   ]
 }
