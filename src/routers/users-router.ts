@@ -9,18 +9,18 @@ import {queryParamsParser} from "../helpers/query-params-parser";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 
 export const usersRouter = Router({})
-
-const pageNumberValidation = query('pageNumber').isInt().toInt(1).default(1)
-const pageSizeValidation = query('pageSize').isInt().toInt(10).default(10)
+//
+// const pageNumberValidation = query('pageNumber').isInt().toInt(1).default(1)
+// const pageSizeValidation = query('pageSize').isInt().toInt(10).default(10)
 
 usersRouter.get('/',
     authValidationMiddleware,
-    pageSizeValidation,
-    pageNumberValidation,
+    //pageSizeValidation,
+    //pageNumberValidation,
     inputValidationMiddleware,
     async (req: Request<{}, {}, {}, UsersQueryType, {}>, res: Response) => {
         const parsedQuery = queryParamsParser(req.query)
-        //console.log(parsedQuery)
+        console.log(req.query)
         let foundUsers: UsersType[] = await usersGetRepository.findUsers(parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection, parsedQuery.searchLoginTerm, parsedQuery.searchEmailTerm)
         let foundUsersTotalCount = await usersGetRepository.findUsersTotalCount(parsedQuery.searchLoginTerm, parsedQuery.searchEmailTerm)
         let foundUsersFull = {

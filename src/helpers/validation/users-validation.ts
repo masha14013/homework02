@@ -14,7 +14,9 @@ const emailValidation = body('email').isString().trim().isURL().isLength({
     max: 100
 }).withMessage('URL length should not exceed 100 symbols')
 
-export const createUserValidation = [loginValidation,
+export const createUserValidation = [
+    loginValidation,
     passwordValidation,
     emailValidation,
-    inputValidationMiddleware]
+    inputValidationMiddleware
+]
