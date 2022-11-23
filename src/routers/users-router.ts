@@ -21,7 +21,7 @@ usersRouter.get('/',
     async (req: Request<{}, {}, {}, UsersQueryType, {}>, res: Response) => {
         const parsedQuery = queryParamsParser(req.query)
         console.log(req.query)
-        let foundUsers: UsersType[] = await usersGetRepository.findUsers(parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection, parsedQuery.searchLoginTerm, parsedQuery.searchEmailTerm)
+        let foundUsers = await usersGetRepository.findUsers(parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection, parsedQuery.searchLoginTerm, parsedQuery.searchEmailTerm)
         let foundUsersTotalCount = await usersGetRepository.findUsersTotalCount(parsedQuery.searchLoginTerm, parsedQuery.searchEmailTerm)
         let foundUsersFull = {
             pagesCount: Math.ceil(foundUsersTotalCount / parsedQuery.pageSize),
