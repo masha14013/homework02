@@ -1,9 +1,10 @@
 import {usersCollection, UsersType} from "./db";
+import {ObjectId} from "mongodb";
 
 export const usersGetRepository = {
     async findUsers(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any, searchLoginTerm: string, searchEmailTerm: string) {
         const filter = {
-            $or: [{login: {$regex: searchLoginTerm ?? '',$options: "i"}},
+            $or: [{login: {$regex: searchLoginTerm ?? '', $options: "i"}},
                 {email: {$regex: searchEmailTerm ?? '', $options: "i"}}]
         }
 
@@ -21,7 +22,9 @@ export const usersGetRepository = {
         }
         return usersCollection.countDocuments(filter)
     },
-    async findUserById(id: string) {
-        return await usersCollection.findOne({id: id}, {projection: {_id: 0, passwordHash: 0, passwordSalt: 0}})
+    async findUserById(id: ObjectId): Promise<UsersType | null> {
+        return usersCollection.findOne({_id: id}, {projection: {_id: 0, passwordHash: 0, passwordSalt: 0}})
+        /*return await usersCollection.findOne({_id: id})
+            .project( {_id: 0, passwordHash: 0, passwordSalt: 0})*/
     }
 }

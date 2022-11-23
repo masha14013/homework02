@@ -1,11 +1,12 @@
 import {usersCollection, UsersType} from "./db";
+import {ObjectId} from "mongodb";
 
 export const usersRepository = {
-    async createUser(newUser: UsersType): Promise<string> {
+    async createUser(newUser: UsersType): Promise<ObjectId> {
         //const newUserWithoutId: UsersType = Object.assign({}, newUser)
         //return newUserWithoutId; // insertedId
         const result = await usersCollection.insertOne(newUser)
-        return String(result.insertedId)
+        return result.insertedId
     },
     async deleteUser(id: string): Promise<boolean> {
         const result = await usersCollection.deleteOne({id: id})

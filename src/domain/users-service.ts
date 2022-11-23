@@ -1,9 +1,10 @@
 import {UsersType} from "../repositories/db";
 import {usersRepository} from "../repositories/users-repository";
 import bcrypt from 'bcrypt'
+import {ObjectId} from "mongodb";
 
 export const usersService = {
-    async createUser(login: string, password: string, email: string): Promise<string> {
+    async createUser(login: string, password: string, email: string): Promise<ObjectId> {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, passwordSalt)
         const newUser: UsersType =
