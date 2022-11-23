@@ -2,6 +2,7 @@ import {UsersType} from "../repositories/db";
 import {usersRepository} from "../repositories/users-repository";
 import bcrypt from 'bcrypt'
 import {ObjectId} from "mongodb";
+import {usersGetRepository} from "../repositories/users-get-repository";
 
 export const usersService = {
     async createUser(login: string, password: string, email: string): Promise<ObjectId> {
@@ -22,7 +23,7 @@ export const usersService = {
         return await usersRepository.deleteUser(id)
     },
     async checkCredentials(loginOrEmail: string, password: string) {
-        const user = await usersRepository.findByLoginOrEmail(loginOrEmail)
+        const user = await usersGetRepository.findByLoginOrEmail(loginOrEmail)
         if(!user) return false
         const passwordHash = await this._generateHash(password, user.passwordSalt)
         if (user.passwordHash !== passwordHash) {
