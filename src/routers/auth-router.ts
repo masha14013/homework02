@@ -23,6 +23,6 @@ authRouter.post('/login',
         if (!result) {
             res.sendStatus(401)
         } else {
-            res.sendStatus(200)
+            res.sendStatus(204)
         }
     })
