@@ -18,13 +18,11 @@ export const usersGetRepository = {
     async findUsersTotalCount(searchLoginTerm: string, searchEmailTerm: string): Promise<number> {
         const filter = {
             $or: [{login: {$regex: searchLoginTerm ?? '', $options: "i"}},
-                {password: {$regex: searchEmailTerm ?? '', $options: "i"}}]
+                {email: {$regex: searchEmailTerm ?? '', $options: "i"}}]
         }
         return usersCollection.countDocuments(filter)
     },
     async findUserById(id: ObjectId): Promise<UsersType | null> {
         return usersCollection.findOne({_id: id}, {projection: {_id: 0, passwordHash: 0, passwordSalt: 0}})
-        /*return await usersCollection.findOne({_id: id})
-            .project( {_id: 0, passwordHash: 0, passwordSalt: 0})*/
     }
 }
