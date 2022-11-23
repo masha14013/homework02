@@ -3,12 +3,8 @@ import {usersCollection, UsersType} from "./db";
 export const usersGetRepository = {
     async findUsers(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any, searchLoginTerm: string, searchEmailTerm: string) {
         const filter = {
-            $or: [{
-                login: {
-                    $regex: searchLoginTerm ?? '',
-                    $options: "i"
-                }
-            }, {email: {$regex: searchEmailTerm ?? '', $options: "i"}}]
+            $or: [{login: {$regex: searchLoginTerm ?? '',$options: "i"}},
+                {email: {$regex: searchEmailTerm ?? '', $options: "i"}}]
         }
 
         return await usersCollection.find(filter)
@@ -24,5 +20,8 @@ export const usersGetRepository = {
                 {password: {$regex: searchEmailTerm ?? '', $options: "i"}}]
         }
         return usersCollection.countDocuments(filter)
+    },
+    async findUserById(id: string) {
+        return await usersCollection.findOne({id: id}, {projection: {_id: 0, passwordHash: 0, passwordSalt: 0}})
     }
 }

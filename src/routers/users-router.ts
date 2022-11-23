@@ -41,10 +41,11 @@ usersRouter.post('/',
         let password = req.body.password
         let email = req.body.email
 
-        const newUser = await usersService.createUser(login, password, email)
-        if (!newUser) {
+        const newUserId = await usersService.createUser(login, password, email) //userID
+        if (!newUserId) {
             res.sendStatus(400)
         } else {
+            const newUser = await usersGetRepository.findUserById(newUserId) //getUserById
             res.status(201).send(newUser)
         }
     })

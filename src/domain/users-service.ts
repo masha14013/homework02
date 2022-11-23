@@ -3,7 +3,7 @@ import {usersRepository} from "../repositories/users-repository";
 import bcrypt from 'bcrypt'
 
 export const usersService = {
-    async createUser(login: string, password: string, email: string): Promise<UsersType> {
+    async createUser(login: string, password: string, email: string): Promise<string> {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, passwordSalt)
         const newUser: UsersType =
@@ -15,8 +15,8 @@ export const usersService = {
                 passwordSalt,
                 createdAt: new Date().toISOString()
             }
-        const createdUser = await usersRepository.createUser(newUser)
-        return createdUser;
+        const createdUserId = await usersRepository.createUser(newUser)
+        return createdUserId; //insertedID
     }, async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
