@@ -7,7 +7,6 @@ export const blogsRepository = {
         return newBlogWithoutId;
     },
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
-
         const result = await blogsCollection.updateOne({id: id}, {
             $set: {
                 name: name,
@@ -15,7 +14,6 @@ export const blogsRepository = {
                 websiteUrl: websiteUrl
             }
         })
-
         return result.matchedCount === 1
     },
     async deleteBlog(id: string): Promise<boolean> {

@@ -1,4 +1,4 @@
-import {UsersType} from "../repositories/db";
+import {UsersDBType, UsersType} from "../repositories/db";
 import {usersRepository} from "../repositories/users-repository";
 import bcrypt from 'bcrypt'
 import {ObjectId} from "mongodb";
@@ -18,18 +18,18 @@ export const usersService = {
                 createdAt: new Date().toISOString()
             }
         const createdUserId = await usersRepository.createUser(newUser)
-        return createdUserId; //insertedID
+        return createdUserId;
     }, async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
-    async checkCredentials(loginOrEmail: string, password: string) {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<UsersDBType | null> {
         const user = await usersGetRepository.findByLoginOrEmail(loginOrEmail)
-        if(!user) return false
+        if(!user) return null
         const passwordHash = await this._generateHash(password, user.passwordSalt)
         if (user.passwordHash !== passwordHash) {
-            return false
+            return null
         }
-        return true
+        return user
     },
     async _generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)

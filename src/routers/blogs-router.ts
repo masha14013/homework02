@@ -85,7 +85,6 @@ blogsRouter.put('/:blogId',
         let name = req.body.name
         let websiteUrl = req.body.websiteUrl
         let description = req.body.description
-
         const id = req.params.blogId
 
         const isUpdated = await blogsService.updateBlog(id, name, description, websiteUrl)

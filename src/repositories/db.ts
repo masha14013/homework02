@@ -1,6 +1,5 @@
-import {MongoClient} from "mongodb";
+import {MongoClient, ObjectId} from "mongodb";
 
-//const mongoUri = 'mongodb+srv://masha14013:Agrsarius2012@cluster0.dcrn9l1.mongodb.net/blogs?retryWrites=true&w=majority' || "mongodb://0.0.0.0:27017";
 const mongoUri = process.env.MONGO_URI || "mongodb://0.0.0.0:27017";
 
 export const client = new MongoClient(mongoUri);
@@ -10,6 +9,7 @@ export const blogsCollection = db.collection<BlogsType>("blogs")
 export const postsCollection = db.collection<PostsType>("posts")
 export const authCollection = db.collection<AuthType>("login")
 export const usersCollection = db.collection<UsersType>("users")
+export const commentsCollection = db.collection<CommentsType>("comments")
 
 export type BlogsType = {
     id: string,
@@ -48,6 +48,15 @@ export type UsersType = {
     passwordSalt: string,
     createdAt: string
 }
+export type UsersDBType = {
+    _id: ObjectId,
+    id: string,
+    login: string,
+    email: string,
+    passwordHash: string,
+    passwordSalt: string,
+    createdAt: string
+}
 export type UsersQueryType = {
     pageNumber: string,
     pageSize: string,
@@ -60,6 +69,13 @@ export type AuthType = {
     login: string,
     password: string
 }
+export type CommentsType = {
+    content: string
+}
+export type CommentsDBType = {
+    _id: ObjectId,
+    content: string
+}
 
 export async function runDb() {
     try {
@@ -70,6 +86,7 @@ export async function runDb() {
         await client.db("posts").command({ping: 1});
         await client.db("auth").command({ping: 1});
         await client.db("users").command({ping: 1});
+        await client.db("comments").command({ping: 1});
         console.log("Connected successfully to mongo server");
     } catch {
         console.log("Connection failed")

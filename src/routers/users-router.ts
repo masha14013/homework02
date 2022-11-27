@@ -1,15 +1,14 @@
 import {Request, Response, Router} from "express";
-import {UsersQueryType, UsersType} from "../repositories/db";
+import {UsersQueryType} from "../repositories/db";
 import {usersGetRepository} from "../repositories/users-get-repository";
 import {authValidationMiddleware} from "../middlewares/auth-validation-middleware";
 import {usersService} from "../domain/users-service";
-import {query} from "express-validator";
 import {createUserValidation} from "../helpers/validation/users-validation";
 import {queryParamsParser} from "../helpers/query-params-parser";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 
 export const usersRouter = Router({})
-//
+
 // const pageNumberValidation = query('pageNumber').isInt().toInt(1).default(1)
 // const pageSizeValidation = query('pageSize').isInt().toInt(10).default(10)
 
