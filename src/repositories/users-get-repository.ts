@@ -8,12 +8,18 @@ export const usersGetRepository = {
                 {email: {$regex: searchEmailTerm ?? '', $options: "i"}}]
         }
 
-        return await usersCollection.find(filter)
-            .project({_id: 0, passwordHash: 0, passwordSalt: 0})
+        return await usersCollection.find(filter, {projection: {_id: 0, passwordHash: 0, passwordSalt: 0}})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .sort({[sortBy]: sortDirection})
             .toArray()
+
+        /*return await usersCollection.find(filter)
+            .project({_id: 0, passwordHash: 0, passwordSalt: 0})
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .sort({[sortBy]: sortDirection})
+            .toArray()*/
     },
     async findUsersTotalCount(searchLoginTerm: string, searchEmailTerm: string): Promise<number> {
         const filter = {
@@ -22,8 +28,8 @@ export const usersGetRepository = {
         }
         return usersCollection.countDocuments(filter)
     },
-    async findUserById(id: ObjectId): Promise<UsersDBType | null> {
-        return usersCollection.findOne({_id: id}, {projection: {passwordHash: 0, passwordSalt: 0}})
+    async findUserById(id: ObjectId): Promise<UsersType | null> {
+        return usersCollection.findOne({_id: id}, {projection: {_id: 0, passwordHash: 0, passwordSalt: 0}})
     },
     async findByLoginOrEmail(loginOrEmail: string): Promise<UsersDBType | null> {
         const user = await usersCollection.findOne({ $or: [{email: loginOrEmail}, {login: loginOrEmail}]})
