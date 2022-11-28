@@ -70,11 +70,19 @@ export type AuthType = {
     password: string
 }
 export type CommentsType = {
-    content: string
+    id: string,
+    content: string,
+    userId: string,
+    userLogin: string,
+    createdAt: string
 }
 export type CommentsDBType = {
     _id: ObjectId,
-    content: string
+    id: string,
+    content: string,
+    userId: string,
+    userLogin: string,
+    createdAt: string
 }
 
 export async function runDb() {

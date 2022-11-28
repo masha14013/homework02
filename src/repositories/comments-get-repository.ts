@@ -6,5 +6,15 @@ export const commentsGetRepository = {
     },
     async getAllComments() {
 
+    },
+    async findComments(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any) {
+        return await commentsCollection.find({}, {projection: {_id: 0}})
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .sort({[sortBy]: sortDirection})
+            .toArray()
+    },
+    async findCommentsTotalCount(): Promise<number> {
+        return commentsCollection.countDocuments()
     }
 }

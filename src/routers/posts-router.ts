@@ -3,11 +3,14 @@ import {postsRepository} from "../repositories/posts-repository";
 import {body} from "express-validator";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {authValidationMiddleware} from "../middlewares/auth-validation-middleware";
-import {BlogsType, PostsQueryType, PostsType} from "../repositories/db";
+import {BlogsType, CommentsType, PostsQueryType, PostsType} from "../repositories/db";
 import {postsGetRepository} from "../repositories/posts-get-repository";
 import {postsService} from "../domain/posts-service";
+import {commentsGetRepository} from "../repositories/comments-get-repository";
+import {commentsService} from "../domain/comments-service";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
-export const postsQueryParamsParser = (query: {pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
+export const postsQueryParamsParser = (query: { pageNumber: string, pageSize: string, sortBy: string, sortDirection: string }) => {
     let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1
     let pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10
     let sortBy = typeof query.sortBy === 'string' ? query.sortBy : 'createdAt'
@@ -64,7 +67,6 @@ postsRouter.post('/',
     blogIdValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-
         const title = req.body.title
         const shortDescription = req.body.shortDescription
         const content = req.body.content
@@ -85,6 +87,45 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
         res.status(200).send(foundPost)
     }
 })
+postsRouter.get('/:postId/comments', async (req: Request<{}, {}, {}, PostsQueryType, {}>, res: Response) => {
+    const parsedQuery = postsQueryParamsParser(req.query)
+
+    let foundComments: CommentsType[] = await commentsGetRepository.findComments
+    (parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
+    let foundCommentsTotalCount = await commentsGetRepository.findCommentsTotalCount()
+    let foundCommentsFull = {
+        pagesCount: Math.ceil(foundCommentsTotalCount / parsedQuery.pageSize),
+        page: parsedQuery.pageNumber,
+        pageSize: parsedQuery.pageSize,
+        totalCount: foundCommentsTotalCount,
+        items: foundComments
+    }
+
+    res.status(200).send(foundCommentsFull)
+})
+postsRouter.post('/:postId/comments',
+    authMiddleware,
+    titleValidation,
+    descriptionValidation,
+    contentValidation,
+    blogIdValidation,
+    inputValidationMiddleware,
+    async (req: Request, res: Response) => {
+        const content = req.body.content
+        //const commentId = req.body.commentId
+        const postId = req.params.postId
+        const user = req.user
+        if (!user) {
+            res.sendStatus(500)
+        }
+
+        const newComment = await commentsService.createComment(content, postId, user)
+        if (!newComment) {
+            res.sendStatus(400)
+        } else {
+            res.status(201).send(newComment)
+        }
+    })
 postsRouter.put('/:postId',
     authValidationMiddleware,
     titleValidation,
