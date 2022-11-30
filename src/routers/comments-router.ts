@@ -30,29 +30,22 @@ commentsRouter.put('/:commentId',
             res.sendStatus(404)
         }
     })
-    /*.put('/',
-        authMiddleware,
-        async (req: Request, res: Response) => {
-            const isUpdated = await commentsService.updateComment(req.body.comment, req.user!._id)
-            if (isUpdated) {
-                res.sendStatus(204)
-            } else {
-                res.sendStatus(404)
-            }
-
-        })*/
-commentsRouter.get('/', async (req: Request, res: Response) => {
-        const users = await commentsGetRepository.getAllComments()
-        res.send(users)
-    })
+commentsRouter.get('/:id', async (req: Request, res: Response) => {
+    let foundComment = await commentsGetRepository.findCommentById(req.params.id)
+    if (!foundComment) {
+        res.sendStatus(404)
+    } else {
+        res.sendStatus(200).send(foundComment)
+    }
+})
 commentsRouter.delete('/:commentId',
-        authMiddleware,
-        async (req: Request, res: Response) => {
-            const id = req.params.commentId
-            const isDeleted = await commentsService.deleteComment(id)
-            if (isDeleted) {
-                res.sendStatus(204)
-            } else {
-                res.sendStatus(404)
-            }
-        })
+    authMiddleware,
+    async (req: Request, res: Response) => {
+        const commentId = req.params.commentId
+        const isDeleted = await commentsService.deleteComment(commentId)
+        if (isDeleted) {
+            res.sendStatus(204)
+        } else {
+            res.sendStatus(404)
+        }
+    })

@@ -42,6 +42,10 @@ const blogIdValidation = body('blogId').isString().trim().isLength({
     min: 1,
     max: 30
 }).withMessage('Id length should be from 1 to 30 symbols')
+export const commentContentValidation = body('content').isString().trim().isLength({
+    min: 20,
+    max: 300
+}).withMessage('Content length should be from 3 to 1000 symbols')
 
 postsRouter.get('/', async (req: Request<{}, {}, {}, PostsQueryType, {}>, res: Response) => {
     const parsedQuery = postsQueryParamsParser(req.query)
@@ -87,12 +91,13 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
         res.status(200).send(foundPost)
     }
 })
-postsRouter.get('/:postId/comments', async (req: Request<{}, {}, {}, PostsQueryType, {}>, res: Response) => {
+postsRouter.get('/:postId/comments', async (req: Request<{ postId: string }, {}, {}, PostsQueryType, {}>, res: Response) => {
     const parsedQuery = postsQueryParamsParser(req.query)
+    const postId = req.params.postId
 
-    let foundComments: CommentsType[] = await commentsGetRepository.findComments
-    (parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
-    let foundCommentsTotalCount = await commentsGetRepository.findCommentsTotalCount()
+    let foundComments: CommentsType[] = await commentsGetRepository.findCommentsForSpecificPost
+    (postId, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
+    let foundCommentsTotalCount = await commentsGetRepository.findCommentsForSpecificPostTotalCount(postId)
     let foundCommentsFull = {
         pagesCount: Math.ceil(foundCommentsTotalCount / parsedQuery.pageSize),
         page: parsedQuery.pageNumber,
@@ -105,16 +110,13 @@ postsRouter.get('/:postId/comments', async (req: Request<{}, {}, {}, PostsQueryT
 })
 postsRouter.post('/:postId/comments',
     authMiddleware,
-    titleValidation,
-    descriptionValidation,
-    contentValidation,
-    blogIdValidation,
+    commentContentValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const content = req.body.content
-        //const commentId = req.body.commentId
         const postId = req.params.postId
         const user = req.user
+        console.log(user)
         if (!user) {
             res.sendStatus(500)
         }
@@ -139,7 +141,6 @@ postsRouter.put('/:postId',
         let shortDescription = req.body.shortDescription
         let content = req.body.content
         let blogId = req.body.blogId
-
         const id = req.params.postId
 
         const isUpdated = await postsService.updatePost(id, title, shortDescription, content, blogId)

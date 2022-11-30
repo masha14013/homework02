@@ -1,4 +1,4 @@
-import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
+import {postsCollection, PostsType} from "./db";
 
 export const postsGetRepository = {
 

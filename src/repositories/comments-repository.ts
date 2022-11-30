@@ -2,14 +2,14 @@ import {commentsCollection, CommentsType} from "./db";
 import {ObjectId} from "mongodb";
 
 export const commentsRepository = {
-    async updateComment(comment: string, userId: ObjectId): Promise<boolean> {
-        const result = await commentsCollection.updateOne({_id: userId}, {
-            $set: {content: comment}
+    async updateComment(id: string, content: string): Promise<boolean> {
+        const result = await commentsCollection.updateOne({id: id}, {
+            $set: {content: content}
         })
         return result.matchedCount === 1
     },
-    async deleteComment(id: string): Promise<boolean> {
-        const result = await commentsCollection.deleteOne({id: id})
+    async deleteComment(commentId: string): Promise<boolean> {
+        const result = await commentsCollection.deleteOne({id: commentId})
         return result.deletedCount === 1
     },
     async createComment(newComment: CommentsType): Promise<CommentsType | undefined> {

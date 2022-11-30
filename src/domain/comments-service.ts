@@ -13,18 +13,18 @@ export const commentsService = {
             const newComment: CommentsType = {
                 id: (+(new Date())).toString(),
                 content: content,
-                userId: user.userId,
-                userLogin: user.userLogin,
+                userId: user.id,
+                userLogin: user.login,
                 createdAt: new Date().toISOString()
             }
             const createdComment = await commentsRepository.createComment(newComment)
             return createdComment
         }
     },
-    async updateComment(comment: string, userId: ObjectId): Promise<boolean> {
-        return await commentsRepository.updateComment(comment, userId)
+    async updateComment(id: string, content: string): Promise<boolean> {
+        return await commentsRepository.updateComment(id, content)
     },
-    async deleteComment(id: string): Promise<boolean> {
-        return await commentsRepository.deleteComment(id)
+    async deleteComment(commentId: string): Promise<boolean> {
+        return await commentsRepository.deleteComment(commentId)
     }
 }

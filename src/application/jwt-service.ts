@@ -5,7 +5,7 @@ import {UsersDBType} from "../repositories/db";
 
 export const jwtService = {
     async createJWT(user: UsersDBType | null) {
-        const token = jwt.sign({userId: user!._id}, settings.JWT_SECRET, {expiresIn: '1h'})
+        const token = jwt.sign({userId: user!._id}, settings.JWT_SECRET, {expiresIn: '10d'})
         return token
     },
     async getUserIdByToken(token: string) {
