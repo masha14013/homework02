@@ -1,5 +1,4 @@
 import {commentsCollection, CommentsType} from "./db";
-import {ObjectId} from "mongodb";
 
 export const commentsRepository = {
     async updateComment(id: string, content: string): Promise<boolean> {

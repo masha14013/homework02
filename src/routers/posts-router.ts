@@ -118,7 +118,7 @@ postsRouter.post('/:postId/comments',
         const user = req.user
         console.log(user)
         if (!user) {
-            res.sendStatus(500)
+            res.status(500).send("no user in request")
         }
 
         const newComment = await commentsService.createComment(content, postId, user)

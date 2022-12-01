@@ -1,6 +1,4 @@
 import {commentsRepository} from "../repositories/comments-repository";
-import {commentsGetRepository} from "../repositories/comments-get-repository";
-import {ObjectId} from "mongodb";
 import {CommentsType, postsCollection, PostsType} from "../repositories/db";
 
 export const commentsService = {

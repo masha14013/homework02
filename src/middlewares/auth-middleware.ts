@@ -14,5 +14,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     if (userId) {
         req.user = await usersGetRepository.findUserById(userId)
         next()
+        return
     }
+    res.status(401).send("Invalid token")
 }
