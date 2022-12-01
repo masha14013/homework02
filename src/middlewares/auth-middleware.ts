@@ -5,6 +5,7 @@ import {usersGetRepository} from "../repositories/users-get-repository";
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         res.sendStatus(401)
+        res.status(401).send("Invalid token")
         return
     }
 
@@ -15,5 +16,5 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         req.user = await usersGetRepository.findUserById(userId)
         next()
     }
-    res.status(401).send("Invalid token")
+    //res.status(401).send("Invalid token")
 }
