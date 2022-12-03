@@ -6,7 +6,7 @@ import {authValidationMiddleware} from "../middlewares/auth-validation-middlewar
 import {BlogsType, PostsType, BlogsQueryType, PostsQueryType} from "../repositories/db";
 import {blogsGetRepository} from "../repositories/blogs-get-repository";
 import {postsGetRepository} from "../repositories/posts-get-repository";
-import {contentValidation, descriptionValidation, postsQueryParamsParser, titleValidation} from "./posts-router";
+import {postsQueryParamsParser} from "./posts-router";
 
 export const queryParamsParser = (query: {searchNameTerm: string, pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
     let pageNumber = +query.pageNumber || 1
@@ -29,7 +29,23 @@ export const blogsRouter = Router({})
 const nameValidation = body('name').isString().trim().isLength({
     min: 3,
     max: 15
-}).withMessage('Title length should be from 3 to 15 symbols')
+}).withMessage('Name length should be from 3 to 15 symbols')
+const titleValidation = body('title').isString().trim().isLength({
+    min: 3,
+    max: 30
+}).withMessage('Title length should be from 3 to 30 symbols')
+const shortDescriptionValidation = body('shortDescription').isString().trim().isLength({
+    min: 3,
+    max: 100
+}).withMessage('Description length should be from 3 to 100 symbols')
+const contentValidation = body('content').isString().trim().isLength({
+    min: 3,
+    max: 1000
+}).withMessage('Content length should be from 3 to 1000 symbols')
+const descriptionValidation = body('description').isString().trim().isLength({
+    min: 3,
+    max: 500
+}).withMessage('Description length should not exceed 500 symbols')
 const urlValidation = body('websiteUrl').isString().trim().isURL().isLength({
     min: 10,
     max: 100
@@ -54,6 +70,7 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, BlogsQueryType, {}>, res: R
 blogsRouter.post('/',
     authValidationMiddleware,
     nameValidation,
+    descriptionValidation,
     urlValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
@@ -110,7 +127,7 @@ blogsRouter.delete('/:blogId',
 blogsRouter.post('/:blogId/posts',
     authValidationMiddleware,
     titleValidation,
-    descriptionValidation,
+    shortDescriptionValidation,
     contentValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {

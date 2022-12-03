@@ -8,7 +8,7 @@ const loginValidation = body('login').isString().trim().isLength({
 const passwordValidation = body('password').isString().trim().isLength({
     min: 6,
     max: 20
-}).withMessage('Login length should be from 6 to 20 symbols')
+}).withMessage('Password length should be from 6 to 20 symbols')
 const emailValidation = body('email').isString().trim().isURL().isLength({
     min: 10,
     max: 100

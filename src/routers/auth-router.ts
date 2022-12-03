@@ -11,11 +11,11 @@ export const authRouter = Router({})
 const loginValidation = body('loginOrEmail').isString().trim().isLength({
     min: 3,
     max: 30
-}).withMessage('Title length should be from 3 to 30 symbols')
+}).withMessage('Login length should be from 3 to 30 symbols')
 const passwordValidation = body('password').isString().trim().isLength({
     min: 3,
     max: 100
-}).withMessage('Title length should be from 3 to 100 symbols')
+}).withMessage('Password length should be from 3 to 100 symbols')
 
 authRouter.post('/login',
     loginValidation,

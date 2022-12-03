@@ -3,6 +3,7 @@ import {validationResult} from "express-validator";
 
 export const inputValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
         const error = errors.array({onlyFirstError: true}).map(el => {
             return {
