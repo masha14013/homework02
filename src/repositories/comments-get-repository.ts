@@ -11,7 +11,7 @@ export const commentsGetRepository = {
         pageSize: number,
         sortBy: string,
         sortDirection: any
-    ): Promise<{ id: ObjectId; content: string; userId: string; userLogin: string; createdAt: string }[]> {
+    ): Promise<{ id: string; content: string; userId: string; userLogin: string; createdAt: string }[]> {
         const comments = await commentsCollection.find({postId: postId}/*, {projection: {_id: 0}}*/)
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
@@ -19,7 +19,7 @@ export const commentsGetRepository = {
             .toArray()
 
         return comments.map(comment => ({
-            id: comment._id,
+            id: comment.id,
             content: comment.content,
             userId: comment.userId,
             userLogin: comment.userLogin,
