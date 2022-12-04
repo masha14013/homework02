@@ -11,7 +11,7 @@ export const commentsRepository = {
         const result = await commentsCollection.deleteOne({id: commentId})
         return result.deletedCount === 1
     },
-    async createComment(newComment: CommentsDBType): Promise<CommentsType | undefined> {
+    async createComment(newComment: any): Promise<CommentsType | undefined> {
         //const newCommentWithoutId: CommentsType = Object.assign({}, newComment)
 
 

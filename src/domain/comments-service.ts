@@ -7,8 +7,7 @@ export const commentsService = {
         const post: PostsType | null = await postsCollection.findOne({id: postId})
         console.log(postId, 'post from service')
         if (post) {
-            const newComment: CommentsDBType = {
-                id: (+(new Date())).toString(),
+            const newComment = {
                 content: content,
                 userId: user.id,
                 userLogin: user.login,

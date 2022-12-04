@@ -1,4 +1,5 @@
 import {commentsCollection, CommentsType} from "./db";
+import {ObjectId} from "mongodb";
 
 export const commentsGetRepository = {
     async findCommentById(id: string): Promise<CommentsType | null> {
@@ -10,7 +11,7 @@ export const commentsGetRepository = {
         pageSize: number,
         sortBy: string,
         sortDirection: any
-    ): Promise<CommentsType[]> {
+    ): Promise<{ userLogin: string; createdAt: string; id: ObjectId; userId: string; content: string }[]> {
         const comments = await commentsCollection.find({postId: postId}, {projection: {_id: 0}})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
@@ -18,7 +19,7 @@ export const commentsGetRepository = {
             .toArray()
 
         return comments.map(comment => ({
-            id: comment.id,
+            id: comment._id,
             content: comment.content,
             userId: comment.userId,
             userLogin: comment.userLogin,
