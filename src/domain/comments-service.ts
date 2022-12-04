@@ -8,7 +8,6 @@ export const commentsService = {
         console.log(postId, 'post from service')
         if (post) {
             const newComment = {
-                id: ObjectId,
                 content: content,
                 userId: user.id,
                 userLogin: user.login,

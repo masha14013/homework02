@@ -12,12 +12,10 @@ export const commentsRepository = {
         return result.deletedCount === 1
     },
     async createComment(newComment: any): Promise<CommentsType | undefined> {
-        //const newCommentWithoutId: CommentsType = Object.assign({}, newComment)
-
 
         await commentsCollection.insertOne(newComment)
         console.log('newComment.id', newComment.id)
-        let comment = await commentsCollection.findOne({id: newComment.id})
+        let comment = await commentsCollection.findOne({_id: newComment.id})
         if (comment) {
             return {id: comment._id.toString(),
                 content: comment.content,
@@ -25,10 +23,5 @@ export const commentsRepository = {
                 userLogin: comment.userLogin,
                 createdAt: comment.createdAt}
         }
-
-
-
-
-
     }
 }
