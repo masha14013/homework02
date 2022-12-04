@@ -15,7 +15,7 @@ export const commentsRepository = {
 
         await commentsCollection.insertOne(newComment)
         console.log('newComment.id', newComment.id)
-        let comment = await commentsCollection.findOne({_id: newComment.id})
+        let comment = await commentsCollection.findOne({id: newComment.id})
         if (comment) {
             return {id: comment._id.toString(),
                 content: comment.content,
