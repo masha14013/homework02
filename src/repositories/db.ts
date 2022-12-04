@@ -77,8 +77,8 @@ export type CommentsType = {
     createdAt: string
 }
 export type CommentsDBType = {
-    //_id: ObjectId,
-    id: string,
+    _id: ObjectId,
+    //id: string,
     content: string,
     userId: string,
     userLogin: string,
