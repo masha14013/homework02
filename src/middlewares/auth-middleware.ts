@@ -13,13 +13,13 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     const token = req.headers.authorization.split(' ')[1]
 
     const userId = await jwtService.getUserIdByToken(token)
-
+    console.log('userId', userId)
     if (userId) {
         req.user = await usersGetRepository.findUserById(userId)
-        console.log('userId', userId)
+
         const users = await usersCollection.find().toArray()
         console.log('users', users)
-        next()
+        return next()
     }
-    //res.status(401).send("Invalid token")
+    res.status(401).send("Invalid token")
 }

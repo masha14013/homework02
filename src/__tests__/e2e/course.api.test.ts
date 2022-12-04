@@ -3,7 +3,7 @@ import app from "../../app";
 
 describe('Users e2e tests', () => {
     // const superUser = 'Basic YWRtaW46cXdlcnR5'
-    const superUser = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Mzg1ZmJmNTNhZjNlNDdkZTRhN2FmODEiLCJpYXQiOjE2Njk3MjUyMDQsImV4cCI6MTY3MDU4OTIwNH0.GWMnzn--rEXFxE45LwnmbLgw4QqJ3rVwwGnY76ls4Zo'
+    //const superUser = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Mzg1ZmJmNTNhZjNlNDdkZTRhN2FmODEiLCJpYXQiOjE2Njk3MjUyMDQsImV4cCI6MTY3MDU4OTIwNH0.GWMnzn--rEXFxE45LwnmbLgw4QqJ3rVwwGnY76ls4Zo'
     const testSU = {
         login: 'admin',
         password: 'qwerty'
@@ -204,43 +204,34 @@ describe('Users e2e tests', () => {
             createdAt: expect.any(String)
         })
     })
+
+    /*it('should return 404 if post for the comment does not exist', async () => {
+        await request(app)
+            .get(`/posts/1/comments`)
+            .expect(404)
+    })*/
+    it('should return 200 and a newly created comment', async () => {
+        let result = await request(app)
+            .get(`/posts/${postId}/comments`)
+            .expect(200)
+        const createdComment = result.body;
+        console.log(createdComment)
+        /*expect(createdComment).toEqual({
+            pagesCount: expect.any(Number),
+            page: expect.any(Number),
+            pageSize: expect.any(Number),
+            totalCount: expect.any(Number),
+            items: expect.arrayContaining ([
+                expect.objectContaining({
+                    id: expect.any(String),
+                    content: expect.any(String),
+                    userId: expect.any(String),
+                    userLogin: expect.any(String),
+                    createdAt: expect.any(String)
+                })
+            ]
+        )
+        })*/
+    })
 })
 
-/*
-it('should return 400 for not existing comment', async () => {
-    let result = await request(app)
-        .get('/posts/:postId/comments')
-        .send({login: '', password: '', email: ''})
-        .expect(400)
-    const createdUser = result.body;
-    expect(createdUser).toStrictEqual({
-        errorsMessages: [
-            {
-                message: "Login length should be from 3 to 10 symbols",
-                field: "login"
-            },
-            {
-                message: "Password length should be from 6 to 20 symbols",
-                field: "password"
-            },
-            {
-                message: "Invalid value",
-                field: "email"
-            }
-        ]
-    })
-})
-it('should return 201 and a newly created user', async () => {
-    let result = await request(app)
-        .post('/users')
-        .set('authorization', 'Basic YWRtaW46cXdlcnR5')
-        .send({login: 'admin', password: 'qwerty', email: 'https://qwerty.com'})
-        .expect(201)
-    const createdUser = result.body;
-    expect(createdUser).toEqual({
-        id: expect.any(String),
-        login: 'admin',
-        email: expect.any(String),
-        createdAt: expect.any(String)
-    })
-})*/
