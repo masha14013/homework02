@@ -14,7 +14,7 @@ export const postsQueryParamsParser = (query: { pageNumber: string, pageSize: st
     let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1
     let pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10
     let sortBy = typeof query.sortBy === 'string' ? query.sortBy : 'createdAt'
-    let sortDirection = query.sortDirection === 'desc' ? 1 : -1
+    let sortDirection = query.sortDirection === 'asc' ? 1 : -1
 
     return {
         pageNumber,

@@ -13,7 +13,7 @@ export const queryParamsParser = (query: {searchNameTerm: string, pageNumber: st
     let pageSize = +query.pageSize || 10
     let searchNameTerm = query.searchNameTerm || ''
     let sortBy = query.sortBy || 'createdAt'
-    let sortDirection = query.sortDirection === 'desc' ? 1 : -1
+    let sortDirection = query.sortDirection === 'asc' ? 1 : -1
 
     return {
         searchNameTerm,
