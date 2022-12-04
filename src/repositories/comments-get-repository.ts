@@ -18,7 +18,7 @@ export const commentsGetRepository = {
             .toArray()
 
         return comments.map(comment => ({
-            id: comment._id.toString(),
+            id: comment.id,
             content: comment.content,
             userId: comment.userId,
             userLogin: comment.userLogin,

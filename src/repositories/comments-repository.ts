@@ -1,4 +1,4 @@
-import {commentsCollection, CommentsType} from "./db";
+import {commentsCollection, CommentsDBType, CommentsType} from "./db";
 
 export const commentsRepository = {
     async updateComment(id: string, content: string): Promise<boolean> {
@@ -11,9 +11,24 @@ export const commentsRepository = {
         const result = await commentsCollection.deleteOne({id: commentId})
         return result.deletedCount === 1
     },
-    async createComment(newComment: CommentsType): Promise<CommentsType | undefined> {
-        const newCommentWithoutId: CommentsType = Object.assign({}, newComment)
+    async createComment(newComment: CommentsDBType): Promise<CommentsType | undefined> {
+        //const newCommentWithoutId: CommentsType = Object.assign({}, newComment)
+
+
         await commentsCollection.insertOne(newComment)
-        return newCommentWithoutId;
+        console.log('newComment.id', newComment.id)
+        let comment = await commentsCollection.findOne({id: newComment.id})
+        if (comment) {
+            return {id: comment._id.toString(),
+                content: comment.content,
+                userId: comment.userId,
+                userLogin: comment.userLogin,
+                createdAt: comment.createdAt}
+        }
+
+
+
+
+
     }
 }
