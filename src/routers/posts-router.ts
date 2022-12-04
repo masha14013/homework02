@@ -95,7 +95,7 @@ postsRouter.get('/:postId/comments', async (req: Request<{ postId: string }, {},
     const parsedQuery = postsQueryParamsParser(req.query)
     const postId = req.params.postId
 
-    let foundComments: CommentsType[] = await commentsGetRepository.findCommentsForSpecificPost
+    let foundComments = await commentsGetRepository.findCommentsForSpecificPost
     (postId, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
     let foundCommentsTotalCount = await commentsGetRepository.findCommentsForSpecificPostTotalCount(postId)
     let foundCommentsFull = {
