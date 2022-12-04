@@ -14,14 +14,16 @@ export const commentsRepository = {
     async createComment(newComment: any): Promise<CommentsType | undefined> {
 
         await commentsCollection.insertOne(newComment)
-        console.log('newComment.id', newComment.id)
+        console.log('newComment', newComment)
         let comment = await commentsCollection.findOne({id: newComment.id})
         if (comment) {
-            return {id: comment._id.toString(),
+            return {
+                id: comment._id.toString(),
                 content: comment.content,
                 userId: comment.userId,
                 userLogin: comment.userLogin,
-                createdAt: comment.createdAt}
+                createdAt: comment.createdAt
+            }
         }
     }
 }
