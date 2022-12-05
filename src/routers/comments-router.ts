@@ -4,9 +4,10 @@ import {commentsGetRepository} from "../repositories/comments-get-repository";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {body} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {ObjectId, ObjectID} from "mongodb";
 
 export const commentsRouter = Router({})
-
+const checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
 export const contentValidation = body('content').isString().trim().isLength({
     min: 20,
     max: 300
@@ -20,6 +21,11 @@ commentsRouter.put('/:commentId',
         let content = req.body.content
         const id = req.params.commentId
         console.log('user', req.user)
+
+        if(!checkForHexRegExp.test(id)) {
+            res.sendStatus(404)
+            return
+        }
 
         const foundComment = await commentsGetRepository.findCommentById(id)
         console.log('foundComment', foundComment)
@@ -56,8 +62,10 @@ commentsRouter.delete('/:commentId',
     authMiddleware,
     async (req: Request, res: Response) => {
         const id = req.params.commentId
-
-
+        if(!checkForHexRegExp.test(id)) {
+            res.sendStatus(404)
+            return
+        }
         const foundComment = await commentsGetRepository.findCommentById(id)
 
         if(!foundComment) {
