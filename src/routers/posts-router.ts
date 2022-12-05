@@ -41,7 +41,7 @@ export const contentValidation = body('content').isString().trim().isLength({
 }).withMessage('Content length should be from 3 to 1000 symbols')
 const blogIdValidation = body('blogId').isString().trim().isLength({
     min: 1,
-    max: 30
+    max: 45
 }).withMessage('Id length should be from 1 to 30 symbols')
 export const commentContentValidation = body('content').isString().trim().isLength({
     min: 20,
