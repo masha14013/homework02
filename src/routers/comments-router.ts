@@ -7,7 +7,7 @@ import {authMiddleware} from "../middlewares/auth-middleware";
 import {ObjectId, ObjectID} from "mongodb";
 
 export const commentsRouter = Router({})
-const checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
+export const checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
 export const contentValidation = body('content').isString().trim().isLength({
     min: 20,
     max: 300

@@ -1,4 +1,5 @@
 import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
+import {v4} from "uuid";
 
 export const blogsRepository = {
     async createBlog(newBlog: BlogsType): Promise<BlogsType> {
@@ -24,7 +25,7 @@ export const blogsRepository = {
         const blog: BlogsType | null = await blogsCollection.findOne({id: blogId})
         if (blog) {
             const newPost: PostsType = {
-                id: (+(new Date())).toString(),
+                id: v4(),
                 title: title,
                 shortDescription: shortDescription,
                 content: content,

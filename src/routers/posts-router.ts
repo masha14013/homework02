@@ -9,6 +9,7 @@ import {postsService} from "../domain/posts-service";
 import {commentsGetRepository} from "../repositories/comments-get-repository";
 import {commentsService} from "../domain/comments-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {checkForHexRegExp} from "./comments-router";
 
 export const postsQueryParamsParser = (query: { pageNumber: string, pageSize: string, sortBy: string, sortDirection: string }) => {
     let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1
@@ -95,6 +96,8 @@ postsRouter.get('/:postId/comments', async (req: Request<{ postId: string }, {},
     const parsedQuery = postsQueryParamsParser(req.query)
     console.log('req.query', req.query)
     const postId = req.params.postId
+    const post = await postsGetRepository.findPostById(postId)
+    if(!post) return res.sendStatus(404)
 
     let foundComments = await commentsGetRepository.findCommentsForSpecificPost
     (postId, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)

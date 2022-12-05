@@ -1,11 +1,12 @@
 import {blogsRepository} from '../repositories/blogs-db-repository'
 import {BlogsType, PostsType} from "../repositories/db";
+import {v4} from "uuid";
 
 export const blogsService = {
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType> {
         const newBlog: BlogsType =
             {
-                id: (+(new Date())).toString(),
+                id: v4(),
                 name: name,
                 description: description,
                 websiteUrl: websiteUrl,
