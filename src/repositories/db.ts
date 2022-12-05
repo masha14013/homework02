@@ -9,7 +9,7 @@ export const blogsCollection = db.collection<BlogsType>("blogs")
 export const postsCollection = db.collection<PostsType>("posts")
 export const authCollection = db.collection<AuthType>("login")
 export const usersCollection = db.collection<UsersType>("users")
-export const commentsCollection = db.collection<CommentsType>("comments")
+export const commentsCollection = db.collection<CommentsDBType>("comments")
 
 export type BlogsType = {
     id: string,

@@ -3,7 +3,18 @@ import {ObjectId} from "mongodb";
 
 export const commentsGetRepository = {
     async findCommentById(id: string): Promise<CommentsType | null> {
-        return await commentsCollection.findOne({id: id}, {projection: {_id: 0}})
+        const comment = await commentsCollection.findOne({_id: new ObjectId(id)} )
+        if(!comment) {
+            return null
+        } else {
+            return {
+                id: comment._id.toString(),
+                userLogin: comment.userLogin,
+                createdAt: comment.createdAt,
+                content: comment.content,
+                userId: comment.userId
+            }
+        }
     },
     async findCommentsForSpecificPost(
         postId: string,

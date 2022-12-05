@@ -19,12 +19,27 @@ commentsRouter.put('/:commentId',
     async (req: Request, res: Response) => {
         let content = req.body.content
         const id = req.params.commentId
+        console.log('user', req.user)
+
+        if (!req.user) {
+            res.status(500).send("no user in request")
+            return
+        }
+
+        const foundComment = await commentsGetRepository.findCommentById(id)
+        console.log('foundComment', foundComment)
+        if(!foundComment) {
+            res.sendStatus(404)
+            return
+        }
+        if (foundComment.userId !== req.user.id) {
+            res.sendStatus(403)
+            return
+        }
 
         const isUpdated = await commentsService.updateComment(id, content)
 
         if (isUpdated) {
-            //const comment = await commentsGetRepository.findCommentById(id)
-            //res.status(204).send(comment)
             res.sendStatus(204)
         } else {
             res.sendStatus(404)
@@ -35,16 +50,33 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
     if (!foundComment) {
         res.sendStatus(404)
     } else {
-        res.sendStatus(200).send(foundComment)
+        res.status(200).send(foundComment)
     }
 })
 commentsRouter.delete('/:commentId',
     authMiddleware,
     async (req: Request, res: Response) => {
-        const commentId = req.params.commentId
-        const isDeleted = await commentsService.deleteComment(commentId)
+        const id = req.params.commentId
+
+        if (!req.user) {
+            res.status(500).send("no user in request")
+            return
+        }
+
+        const foundComment = await commentsGetRepository.findCommentById(req.params.commentId)
+
+        if(!foundComment) {
+            res.sendStatus(404)
+            return
+        }
+        if (foundComment.userId !== req.user.id) {
+            res.sendStatus(403)
+            return
+        }
+
+        const isDeleted = await commentsService.deleteComment(id)
         if (isDeleted) {
-            res.sendStatus(204)
+            res.status(204).send(foundComment)
         } else {
             res.sendStatus(404)
         }

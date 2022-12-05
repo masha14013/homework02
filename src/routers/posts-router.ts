@@ -3,7 +3,7 @@ import {postsRepository} from "../repositories/posts-repository";
 import {body} from "express-validator";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {authValidationMiddleware} from "../middlewares/auth-validation-middleware";
-import {BlogsType, CommentsType, PostsQueryType, PostsType} from "../repositories/db";
+import {PostsQueryType, PostsType} from "../repositories/db";
 import {postsGetRepository} from "../repositories/posts-get-repository";
 import {postsService} from "../domain/posts-service";
 import {commentsGetRepository} from "../repositories/comments-get-repository";
