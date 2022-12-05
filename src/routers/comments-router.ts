@@ -60,6 +60,7 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
 })
 commentsRouter.delete('/:commentId',
     authMiddleware,
+    inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const id = req.params.commentId
         if(!checkForHexRegExp.test(id)) {
