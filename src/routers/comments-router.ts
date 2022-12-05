@@ -32,7 +32,11 @@ commentsRouter.put('/:commentId',
             res.sendStatus(404)
             return
         }
-        if (foundComment.userId !== id) {
+        if (!req.user.id) {
+            res.sendStatus(404)
+            return
+        }
+        if (foundComment.userId !== req.user.id) {
             res.sendStatus(403)
             return
         }
@@ -69,7 +73,11 @@ commentsRouter.delete('/:commentId',
             res.sendStatus(404)
             return
         }
-        if (foundComment.userId !== id) {
+        if (!req.user.id) {
+            res.sendStatus(404)
+            return
+        }
+        if (foundComment.userId !== req.user.id) {
             res.sendStatus(403)
             return
         }
