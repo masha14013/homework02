@@ -3,9 +3,14 @@ import {v4} from "uuid";
 
 export const blogsRepository = {
     async createBlog(newBlog: BlogsType): Promise<BlogsType> {
-        const newBlogWithoutId: BlogsType = Object.assign({}, newBlog)
         await blogsCollection.insertOne(newBlog)
-        return newBlogWithoutId;
+        return {
+            id: newBlog._id?.toString(),
+            name: newBlog.name,
+            description: newBlog.description,
+            createdAt: newBlog.createdAt,
+            websiteUrl: newBlog.websiteUrl
+        }
     },
     async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
         const result = await blogsCollection.updateOne({id: id}, {
@@ -29,7 +34,7 @@ export const blogsRepository = {
                 title: title,
                 shortDescription: shortDescription,
                 content: content,
-                blogId: blog.id,
+                blogId: blog.id!,
                 blogName: blog.name,
                 createdAt: new Date().toISOString()
             }

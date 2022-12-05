@@ -41,7 +41,7 @@ export const contentValidation = body('content').isString().trim().isLength({
 }).withMessage('Content length should be from 3 to 1000 symbols')
 const blogIdValidation = body('blogId').isString().trim().isLength({
     min: 1,
-    max: 45
+    max: 30
 }).withMessage('Id length should be from 1 to 30 symbols')
 export const commentContentValidation = body('content').isString().trim().isLength({
     min: 20,
@@ -119,6 +119,8 @@ postsRouter.post('/:postId/comments',
     async (req: Request, res: Response) => {
         const content = req.body.content
         const postId = req.params.postId
+        const post = await postsGetRepository.findPostById(postId)
+        if(!post) return res.sendStatus(404)
         const user = req.user
         if (!user) {
             res.status(500).send("no user in request")

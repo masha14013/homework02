@@ -1,4 +1,5 @@
 import {postsCollection, PostsType} from "./db";
+import {ObjectId} from "mongodb";
 
 export const postsGetRepository = {
 
@@ -13,6 +14,11 @@ export const postsGetRepository = {
         return postsCollection.countDocuments(filter ? filter : {})
     },
     async findPostById(id: string): Promise<PostsType | null> {
-        return await postsCollection.findOne({id: id}, {projection: {_id: 0}})
+        const post = await postsCollection.findOne({_id: new ObjectId(id)})
+        if(post) {
+            // @ts-ignore
+            delete Object.assign(post, {["id"]: post["_id"]})["_id"];
+        }
+        return post
     }
 }

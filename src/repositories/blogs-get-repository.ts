@@ -1,4 +1,5 @@
 import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
+import {ObjectId} from "mongodb";
 
 export const blogsGetRepository = {
 
@@ -19,7 +20,13 @@ export const blogsGetRepository = {
         return blogsCollection.countDocuments(findFilter)
     },
     async findBlogById(id: string): Promise<BlogsType | null> {
-        return await blogsCollection.findOne({id: id}, {projection: {_id: 0}})
+        const blog = await blogsCollection.findOne({_id: new ObjectId(id)})
+        if(blog){
+            // @ts-ignore
+            delete Object.assign(blog, {["id"]: blog["_id"]})["_id"];
+        }
+        return blog
+
     },
     async findPostsForSpecificBlog(id: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<PostsType[]> {
         return await postsCollection.find({blogId: id}, {projection: {_id: 0}})

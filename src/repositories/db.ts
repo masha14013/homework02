@@ -12,7 +12,8 @@ export const usersCollection = db.collection<UsersType>("users")
 export const commentsCollection = db.collection<CommentsDBType>("comments")
 
 export type BlogsType = {
-    id: string,
+    _id?: ObjectId,
+    id?: string,
     name: string,
     description: string,
     websiteUrl: string,
