@@ -21,7 +21,6 @@ commentsRouter.put('/:commentId',
         const id = req.params.commentId
         console.log('user', req.user)
 
-
         const foundComment = await commentsGetRepository.findCommentById(id)
         console.log('foundComment', foundComment)
         if(!foundComment) {
@@ -59,7 +58,7 @@ commentsRouter.delete('/:commentId',
         const id = req.params.commentId
 
 
-        const foundComment = await commentsGetRepository.findCommentById(req.params.commentId)
+        const foundComment = await commentsGetRepository.findCommentById(id)
 
         if(!foundComment) {
             res.sendStatus(404)
@@ -76,7 +75,7 @@ commentsRouter.delete('/:commentId',
 
         const isDeleted = await commentsService.deleteComment(id)
         if (isDeleted) {
-            res.status(204).send(foundComment)
+            res.sendStatus(204)
         } else {
             res.sendStatus(404)
         }
