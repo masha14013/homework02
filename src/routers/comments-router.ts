@@ -21,10 +21,6 @@ commentsRouter.put('/:commentId',
         const id = req.params.commentId
         console.log('user', req.user)
 
-        if (!req.user) {
-            res.status(500).send("no user in request")
-            return
-        }
 
         const foundComment = await commentsGetRepository.findCommentById(id)
         console.log('foundComment', foundComment)
@@ -32,8 +28,8 @@ commentsRouter.put('/:commentId',
             res.sendStatus(404)
             return
         }
-        if (!req.user.id) {
-            res.sendStatus(404)
+        if (!req.user) {
+            res.status(500).send("no user in request")
             return
         }
         if (foundComment.userId !== req.user.id) {
@@ -62,10 +58,6 @@ commentsRouter.delete('/:commentId',
     async (req: Request, res: Response) => {
         const id = req.params.commentId
 
-        if (!req.user) {
-            res.status(500).send("no user in request")
-            return
-        }
 
         const foundComment = await commentsGetRepository.findCommentById(req.params.commentId)
 
@@ -73,8 +65,8 @@ commentsRouter.delete('/:commentId',
             res.sendStatus(404)
             return
         }
-        if (!req.user.id) {
-            res.sendStatus(404)
+        if (!req.user) {
+            res.status(500).send("no user in request")
             return
         }
         if (foundComment.userId !== req.user.id) {
