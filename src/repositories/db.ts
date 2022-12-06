@@ -21,12 +21,12 @@ export type BlogsType = {
 }
 export type PostsType = {
     _id?: ObjectId,
-    id?: string | null,
+    id?: string,
     title: string,
     shortDescription: string,
     content: string,
     blogId: string,
-    blogName: string | null,
+    blogName: string,
     createdAt: string
 }
 export type BlogsQueryType = {
