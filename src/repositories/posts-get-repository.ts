@@ -4,7 +4,7 @@ import {ObjectId} from "mongodb";
 export const postsGetRepository = {
 
     async findPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any): Promise<PostsType[]> {
-        return await postsCollection.find({}, {projection: {_id: 0}})
+        return await postsCollection.find({}/*, {projection: {_id: 0}}*/)
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .sort({[sortBy]: sortDirection})

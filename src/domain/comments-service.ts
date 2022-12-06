@@ -1,10 +1,10 @@
 import {commentsRepository} from "../repositories/comments-repository";
-import {CommentsDBType, CommentsType, postsCollection, PostsType} from "../repositories/db";
+import {CommentsType, postsCollection, PostsType} from "../repositories/db";
 import {ObjectId} from "mongodb";
 
 export const commentsService = {
     async createComment(content: string, postId: string, user: any): Promise<CommentsType | undefined> {
-        const post: PostsType | null = await postsCollection.findOne({id: postId})
+        const post: PostsType | null = await postsCollection.findOne({_id: new ObjectId(postId)})
         console.log(postId, 'post from service')
         if (post) {
             const newComment = {

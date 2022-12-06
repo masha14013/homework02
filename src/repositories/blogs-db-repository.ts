@@ -1,5 +1,4 @@
 import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
-import {v4} from "uuid";
 
 export const blogsRepository = {
     async createBlog(newBlog: BlogsType): Promise<BlogsType> {
@@ -26,21 +25,16 @@ export const blogsRepository = {
         const result = await blogsCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
-    async createPostForSpecificBlog(title: string, shortDescription: string, content: string, blogId: string): Promise<PostsType | undefined> {
-        const blog: BlogsType | null = await blogsCollection.findOne({id: blogId})
-        if (blog) {
-            const newPost: PostsType = {
-                id: v4(),
-                title: title,
-                shortDescription: shortDescription,
-                content: content,
-                blogId: blog.id!,
-                blogName: blog.name,
-                createdAt: new Date().toISOString()
-            }
-            const newPostWithoutId: PostsType = Object.assign({}, newPost)
-            await postsCollection.insertOne(newPost)
-            return newPostWithoutId;
+    async createPostForSpecificBlog(newPost: PostsType): Promise<PostsType | undefined> {
+        await postsCollection.insertOne(newPost)
+        return {
+            id: newPost._id?.toString(),
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            content: newPost.content,
+            blogId: newPost.blogId!,
+            blogName: newPost.blogName,
+            createdAt: newPost.createdAt
         }
     }
 }

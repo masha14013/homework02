@@ -20,7 +20,8 @@ export type BlogsType = {
     createdAt: string
 }
 export type PostsType = {
-    id: string | null,
+    _id?: ObjectId,
+    id?: string | null,
     title: string,
     shortDescription: string,
     content: string,

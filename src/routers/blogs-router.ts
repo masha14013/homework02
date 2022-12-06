@@ -7,6 +7,7 @@ import {BlogsType, PostsType, BlogsQueryType, PostsQueryType} from "../repositor
 import {blogsGetRepository} from "../repositories/blogs-get-repository";
 import {postsGetRepository} from "../repositories/posts-get-repository";
 import {postsQueryParamsParser} from "./posts-router";
+import {ObjectId} from "mongodb";
 
 export const queryParamsParser = (query: {searchNameTerm: string, pageNumber: string, pageSize: string, sortBy: string, sortDirection: string}) => {
     let pageNumber = +query.pageNumber || 1
@@ -131,16 +132,18 @@ blogsRouter.post('/:blogId/posts',
     contentValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        let foundBlog = await blogsGetRepository.findBlogById(req.params.blogId)
+
+        let foundBlog = await blogsGetRepository.findBlogById(req.params.blogId) // blogId - ObjectId
         if (!foundBlog) {
             res.sendStatus(404)
         } else {
             const title = req.body.title
             const shortDescription = req.body.shortDescription
             const content = req.body.content
-            const blogId = req.params.blogId
+            const blogId = req.params.blogId // blogId - string
 
             const newPost = await blogsService.createPostForSpecificBlog(title, shortDescription, content, blogId)
+            console.log('newPost', newPost)
             if (!newPost) {
                 res.sendStatus(400)
             } else {
@@ -154,6 +157,7 @@ blogsRouter.get('/:blogId/posts', async (req: Request<{ blogId: string }, {}, {}
     let id = req.params.blogId
 
     let foundBlog = await blogsGetRepository.findBlogById(id)
+
     if (!foundBlog) {
         res.sendStatus(404)
     } else {
