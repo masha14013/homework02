@@ -51,8 +51,8 @@ export const commentContentValidation = body('content').isString().trim().isLeng
 postsRouter.get('/', async (req: Request<{}, {}, {}, PostsQueryType, {}>, res: Response) => {
     const parsedQuery = postsQueryParamsParser(req.query)
 
-    let foundPosts: PostsType[] = await postsGetRepository.findPosts
-    (parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
+    let foundPosts: { createdAt: string; blogName: string; shortDescription: string; title: string; blogId: string; content: string }[]
+        = await postsGetRepository.findPosts(parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
     let foundPostsTotalCount = await postsGetRepository.findPostsTotalCount({})
     let foundPostsFull = {
         pagesCount: Math.ceil(foundPostsTotalCount / parsedQuery.pageSize),

@@ -54,8 +54,7 @@ const urlValidation = body('websiteUrl').isString().trim().isURL().isLength({
 
 blogsRouter.get('/', async (req: Request<{}, {}, {}, BlogsQueryType, {}>, res: Response) => {
     const parsedQuery = queryParamsParser(req.query)
-    //console.log(parsedQuery)
-    let foundBlogs: BlogsType[] = await blogsGetRepository.findBlogs
+    let foundBlogs: { createdAt: string; websiteUrl: string; name: string; description: string; id: ObjectId }[] = await blogsGetRepository.findBlogs
         (parsedQuery.searchNameTerm, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
     let foundBlogsTotalCount = await blogsGetRepository.findBlogsTotalCount(parsedQuery.searchNameTerm)
     let foundBlogsFull = {
@@ -97,6 +96,7 @@ blogsRouter.get('/:id', async (req: Request, res: Response) => {
 blogsRouter.put('/:blogId',
     authValidationMiddleware,
     nameValidation,
+    descriptionValidation,
     urlValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
@@ -143,7 +143,6 @@ blogsRouter.post('/:blogId/posts',
             const blogId = req.params.blogId // blogId - string
 
             const newPost = await blogsService.createPostForSpecificBlog(title, shortDescription, content, blogId)
-            console.log('newPost', newPost)
             if (!newPost) {
                 res.sendStatus(400)
             } else {
@@ -161,7 +160,7 @@ blogsRouter.get('/:blogId/posts', async (req: Request<{ blogId: string }, {}, {}
     if (!foundBlog) {
         res.sendStatus(404)
     } else {
-        const foundPosts: PostsType[] = await blogsGetRepository.findPostsForSpecificBlog
+        const foundPosts: { createdAt: string; blogName: string; id: ObjectId; shortDescription: string; title: string; blogId: string; content: string }[] = await blogsGetRepository.findPostsForSpecificBlog
         (id, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
         if (!foundPosts) {
             res.sendStatus(404)

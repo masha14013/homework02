@@ -1,23 +1,31 @@
 import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
+import {ObjectId} from "mongodb";
 
 export const postsRepository = {
     async createPost (newPost: PostsType): Promise<PostsType | undefined> {
-        const newPostWithoutId: PostsType = Object.assign({}, newPost)
         await postsCollection.insertOne(newPost)
-        return newPostWithoutId;
+        return {
+            id: newPost._id?.toString(),
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            content: newPost.content,
+            blogId: newPost.blogId!,
+            blogName: newPost.blogName,
+            createdAt: newPost.createdAt
+        }
     },
     async findPostById (id: string): Promise<PostsType | null> {
-        return await postsCollection.findOne({id: id}, {projection: {_id: 0}})
+        return await postsCollection.findOne({_id: new ObjectId(id)})
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
-        const blog = await blogsCollection.findOne({id: blogId})
+        const blog = await blogsCollection.findOne({_id: new ObjectId(id)})
         if (!blog) return false
 
-        let post = await postsCollection.findOne({id: id})
+        let post = await postsCollection.findOne({_id: new ObjectId(id)})
         if (!post) {
             return false;
         } else {
-            const result = await postsCollection.updateOne({id: id}, {
+            const result = await postsCollection.updateOne({_id: new ObjectId(id)}, {
                 $set: {
                     title: title,
                     shortDescription: shortDescription,
@@ -30,7 +38,7 @@ export const postsRepository = {
         }
     },
     async deletePost(id: string): Promise<boolean> {
-        const result = await postsCollection.deleteOne({id: id})
+        const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
     }
 }
