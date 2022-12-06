@@ -9,7 +9,6 @@ import {postsService} from "../domain/posts-service";
 import {commentsGetRepository} from "../repositories/comments-get-repository";
 import {commentsService} from "../domain/comments-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {checkForHexRegExp} from "./comments-router";
 
 export const postsQueryParamsParser = (query: { pageNumber: string, pageSize: string, sortBy: string, sortDirection: string }) => {
     let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1

@@ -1,4 +1,4 @@
-import {blogsCollection, BlogsType, postsCollection, PostsType} from "./db";
+import {blogsCollection, postsCollection, PostsType} from "./db";
 import {ObjectId} from "mongodb";
 
 export const postsRepository = {
@@ -31,7 +31,7 @@ export const postsRepository = {
                     title: title,
                     shortDescription: shortDescription,
                     content: content,
-                    blogId: blog.id,
+                    blogId: blog._id.toString(),
                     blogName: blog.name
                 }
             })
