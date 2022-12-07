@@ -20,7 +20,6 @@ export const postsRepository = {
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
         const blog = await blogsCollection.findOne({_id: new ObjectId(blogId)})
         if (!blog) return false
-        console.log('blog', blog)
 
         let post = await postsCollection.findOne({_id: new ObjectId(id)})
         if (!post) {

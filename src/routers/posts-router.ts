@@ -120,10 +120,8 @@ postsRouter.post('/:postId/comments',
         const postId = req.params.postId
 
         const post = await postsGetRepository.findPostById(postId)
-        console.log('post', post)
         if(!post) return res.sendStatus(404)
         const user = req.user
-        console.log('user', user)
         if (!user) {
             res.status(500).send("no user in request")
             return

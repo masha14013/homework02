@@ -5,10 +5,8 @@ import {ObjectId} from "mongodb";
 export const commentsService = {
     async createComment(content: string, postId: string, user: any): Promise<CommentsType | undefined> {
         const post: PostsType | null = await postsCollection.findOne({_id: new ObjectId(postId)})
-        console.log(postId, 'post from service')
         if (post) {
             const newComment = {
-                id: (+(new Date())).toString(),
                 content: content,
                 userId: user.id,
                 userLogin: user.login,

@@ -13,18 +13,13 @@ export const commentsRepository = {
         return result.deletedCount === 1
     },
     async createComment(newComment: any): Promise<CommentsType | undefined> {
-
         await commentsCollection.insertOne(newComment)
-        console.log('newComment', newComment)
-        let comment = await commentsCollection.findOne({_id: newComment.id})
-        if (comment) {
-            return {
-                id: comment._id.toString(),
-                content: comment.content,
-                userId: comment.userId,
-                userLogin: comment.userLogin,
-                createdAt: comment.createdAt
-            }
+        return {
+            id: newComment._id?.toString(),
+            content: newComment.content,
+            userId: newComment.userId,
+            userLogin: newComment.userLogin,
+            createdAt: newComment.createdAt
         }
     }
 }

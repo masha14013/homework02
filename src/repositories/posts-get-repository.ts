@@ -25,10 +25,22 @@ export const postsGetRepository = {
     },
     async findPostById(id: string): Promise<PostsType | null> {
         const post = await postsCollection.findOne({_id: new ObjectId(id)})
-        if(post) {
+        /*if(post) {
             // @ts-ignore
             delete Object.assign(post, {["id"]: post["_id"]})["_id"];
+        }*/
+        if(!post) {
+            return null
+        } else {
+            return {
+                id: post._id.toString(),
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName,
+                createdAt: post.createdAt
+            }
         }
-        return post
     }
 }
