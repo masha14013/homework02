@@ -3,12 +3,13 @@ import {postsRepository} from "../repositories/posts-repository";
 import {body} from "express-validator";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {authValidationMiddleware} from "../middlewares/auth-validation-middleware";
-import {PostsQueryType, PostsType} from "../repositories/db";
+import {postsCollection, PostsQueryType, PostsType} from "../repositories/db";
 import {postsGetRepository} from "../repositories/posts-get-repository";
 import {postsService} from "../domain/posts-service";
 import {commentsGetRepository} from "../repositories/comments-get-repository";
 import {commentsService} from "../domain/comments-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {ObjectId} from "mongodb";
 
 export const postsQueryParamsParser = (query: { pageNumber: string, pageSize: string, sortBy: string, sortDirection: string }) => {
     let pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1
@@ -68,11 +69,14 @@ postsRouter.post('/',
     descriptionValidation,
     contentValidation,
     blogIdValidation,
-    body('blogId').custom((value, {req}) => {
+    body('blogId').custom(async (value, {req}) => {
         if (value !== req.body.blogId) {
             throw new Error('Password confirmation does not match password');
         }
-        return true;
+        const post = await postsCollection.findOne({_id: new ObjectId(value)})
+        if (post) {
+            return true;
+        }
     }),
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
@@ -146,11 +150,14 @@ postsRouter.put('/:postId',
     descriptionValidation,
     contentValidation,
     blogIdValidation,
-    body('blogId').custom((value, {req}) => {
+    body('blogId').custom(async (value, {req}) => {
         if (value !== req.body.blogId) {
             throw new Error('Password confirmation does not match password');
         }
-        return true;
+        const post = await postsCollection.findOne({_id: new ObjectId(value)})
+        if (post) {
+            return true;
+        }
     }),
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
