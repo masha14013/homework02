@@ -60,8 +60,6 @@ export type UserAccountDBType = {
 //     emailConfirmation: EmailConfirmationType
 // }>
 export type UserAccountType = {
-    _id?: ObjectId,
-    id?: string,
     login: string,
     email: string,
     passwordHash: string,

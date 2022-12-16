@@ -47,29 +47,46 @@ export const usersService = {
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
-    async checkCredentials(loginOrEmail: string, password: string): Promise<UserAccountDBType | null> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<UsersType | null> {
         const user = await usersGetRepository.findByLoginOrEmail(loginOrEmail)
         if(!user) return null
+        if (!user.emailConfirmation.isConfirmed) return null
+
+        const isHashEquals = await this._isPasswordCorrect(password, user.accountData.passwordHash)
+        if (isHashEquals) {
+            return user
+        } else {
+            return null
+        }
+    },
+    async _isPasswordCorrect(password: string, hash: string) {
+        const isEqual = await bcrypt.compare(password, hash)
+        return isEqual
+    },
+   /* async checkCredentials(loginOrEmail: string, password: string): Promise<UsersType | null> {
+        const user = await usersGetRepository.findByLoginOrEmail(loginOrEmail)
+        if(!user) return null
+        if (!user.emailConfirmation.isConfirmed) return null
+
         const passwordHash = await this._generateHash(password, user.accountData.passwordSalt)
         if (user.accountData.passwordHash !== passwordHash) {
             return null
         }
         return user
-    },
+    },*/
     async _generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
         return hash
     },
     async confirmEmail(code: string): Promise<boolean> {
         let user = await usersRepository.findUserByConfirmationCode(code)
-        console.log('user confirmation', user)
+        console.log('user conf', user)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
         if (user.emailConfirmation.confirmationCode !== code) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false
 
         let result = await usersRepository.updateConfirmation(user._id)
-        console.log('result confirmation', result)
         return result
     }
 }

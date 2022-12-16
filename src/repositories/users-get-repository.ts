@@ -38,12 +38,17 @@ export const usersGetRepository = {
                 accountData: user.accountData,
                 emailConfirmation: user.emailConfirmation
             }
-
         }
     },
-    async findByLoginOrEmail(loginOrEmail: string): Promise<UserAccountDBType | null> {
-        const user = await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
-        return user
+    async findByLoginOrEmail(loginOrEmail: string): Promise<UsersType | null> {
+        //const user = await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
+        const user = await usersCollection.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.userName": loginOrEmail}]})
+        if (!user) return null
+        return {
+            id: user._id.toString(),
+            accountData: user.accountData,
+            emailConfirmation: user.emailConfirmation
+        }
     },
     async findCurrentUser() {
 

@@ -30,6 +30,7 @@ authRouter.post('/registration',
 authRouter.post('/registration-confirmation',
     async (req: Request, res: Response) => {
     const result = await usersService.confirmEmail(req.body.code)
+        console.log('result conf', result)
         if (result) {
             res.sendStatus(204)
         } else {
@@ -37,11 +38,11 @@ authRouter.post('/registration-confirmation',
         }
     })
 
-authRouter.post('/resend-registration-code',
+authRouter.post('/registration-email-resending',
     async (req: Request, res: Response) => {
-        const result = await usersService.confirmEmail(req.body.loginOrEmail)
+        const result = await usersService.confirmEmail(req.body.code)
         if (result) {
-            res.status(201).send()
+            res.sendStatus(204)
         } else {
             res.sendStatus(400)
         }
@@ -64,6 +65,5 @@ authRouter.post('/login',
 authRouter.get('/me',
     authMiddleware,
     async (req: Request, res: Response) => {
-
         return await usersGetRepository.findCurrentUser()
     })
