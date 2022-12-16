@@ -21,7 +21,7 @@ authRouter.post('/registration',
     async (req: Request, res: Response) => {
         const user = await usersService.createUser(req.body.login, req.body.password, req.body.email)
         if (user) {
-            res.sendStatus(204)
+            res.status(204).send(user.emailConfirmation.confirmationCode)
         } else {
             res.sendStatus(400)
         }
