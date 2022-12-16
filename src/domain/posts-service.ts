@@ -6,7 +6,6 @@ import {ObjectId} from "mongodb";
 export const postsService = {
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostsType | undefined> {
         const blog: BlogsType | null = await blogsCollection.findOne({_id: new ObjectId(blogId)})
-        console.log('blog', blog)
         if (blog) {
             const newPost: PostsType = {
                 title: title,

@@ -17,6 +17,36 @@ const passwordValidation = body('password').isString().trim().isLength({
     max: 100
 }).withMessage('Password length should be from 3 to 100 symbols')
 
+authRouter.post('/registration',
+    async (req: Request, res: Response) => {
+        const user = await usersService.createUser(req.body.login, req.body.password, req.body.email)
+        if (user) {
+            res.sendStatus(204)
+        } else {
+            res.sendStatus(400)
+        }
+    })
+
+authRouter.post('/registration-confirmation',
+    async (req: Request, res: Response) => {
+    const result = await usersService.confirmEmail(req.body.code)
+        if (result) {
+            res.sendStatus(204)
+        } else {
+            res.sendStatus(400)
+        }
+    })
+
+authRouter.post('/resend-registration-code',
+    async (req: Request, res: Response) => {
+        const result = await usersService.confirmEmail(req.body.loginOrEmail)
+        if (result) {
+            res.status(201).send()
+        } else {
+            res.sendStatus(400)
+        }
+    })
+
 authRouter.post('/login',
     loginValidation,
     passwordValidation,
@@ -30,6 +60,7 @@ authRouter.post('/login',
             res.status(200).send({accessToken: token})
         }
     })
+
 authRouter.get('/me',
     authMiddleware,
     async (req: Request, res: Response) => {

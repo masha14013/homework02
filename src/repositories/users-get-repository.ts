@@ -1,4 +1,4 @@
-import {usersCollection, UsersDBType, UsersType} from "./db";
+import {EmailConfirmationType, UserAccountDBType, UserAccountType, usersCollection, UsersType} from "./db";
 import {ObjectId} from "mongodb";
 
 export const usersGetRepository = {
@@ -28,11 +28,21 @@ export const usersGetRepository = {
         }
         return usersCollection.countDocuments(filter)
     },
-    async findUserById(id: ObjectId): Promise<UsersType | null> {
-        return usersCollection.findOne({_id: new ObjectId(id)}, {projection: {_id: 0, passwordHash: 0, passwordSalt: 0}})
+    async findUserById(id: string): Promise<UsersType | null> {
+        let user = await usersCollection.findOne({_id: new ObjectId(id)})
+        if (!user) {
+            return null
+        } else {
+            return {
+                id: user._id.toString(),
+                accountData: user.accountData,
+                emailConfirmation: user.emailConfirmation
+            }
+
+        }
     },
-    async findByLoginOrEmail(loginOrEmail: string): Promise<UsersDBType | null> {
-        const user = await usersCollection.findOne({ $or: [{email: loginOrEmail}, {login: loginOrEmail}]})
+    async findByLoginOrEmail(loginOrEmail: string): Promise<UserAccountDBType | null> {
+        const user = await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
         return user
     },
     async findCurrentUser() {

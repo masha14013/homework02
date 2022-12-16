@@ -40,12 +40,13 @@ usersRouter.post('/',
         let password = req.body.password
         let email = req.body.email
 
-        const newUserId = await usersService.createUser(login, password, email) //userID
-        if (!newUserId) {
-            res.sendStatus(400)
+        const newUser = await usersService.createUser(login, password, email)
+        console.log('user from router', newUser)
+        if (!newUser) {
+            res.status(500).send('something went wrong')
         } else {
-            const newUser = await usersGetRepository.findUserById(newUserId) //getUserById
-            res.status(201).send(newUser)
+            const result = await usersGetRepository.findUserById(newUser.id)
+            res.status(201).send(result)
         }
     })
 
