@@ -16,12 +16,25 @@ const passwordValidation = body('password').isString().trim().isLength({
     min: 3,
     max: 100
 }).withMessage('Password length should be from 3 to 100 symbols')
+const loginRegistrationValidation = body('login').isString().trim().isLength({
+    min: 3,
+    max: 10
+}).withMessage('Login length should be from 3 to 10 symbols')
+const passwordRegistrationValidation = body('password').isString().trim().isLength({
+    min: 6,
+    max: 20
+}).withMessage('Password length should be from 6 to 20 symbols')
+const emailRegistrationValidation = body('email').isString().trim().isEmail()
 
 authRouter.post('/registration',
+    loginRegistrationValidation,
+    passwordRegistrationValidation,
+    emailRegistrationValidation,
+    inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const user = await usersService.createUser(req.body.login, req.body.password, req.body.email)
         if (user) {
-            res.status(204).send(user.emailConfirmation.confirmationCode)
+            res.sendStatus(204)
         } else {
             res.sendStatus(400)
         }
