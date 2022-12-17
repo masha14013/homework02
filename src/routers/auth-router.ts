@@ -34,12 +34,8 @@ authRouter.post('/registration',
     emailRegistrationValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        let loginResult = await usersCollection.findOne({'accountData.login': req.body.login})
-        if (loginResult) {
-            res.sendStatus(400)
-        }
-        let emailResult = await usersCollection.findOne({'accountData.email': req.body.email})
-        if (emailResult) {
+    const result = await usersGetRepository.findUserByLoginOrEmail(req.body.login, req.body.email)
+        if (!result) {
             res.sendStatus(400)
         }
         const user = await usersService.createUser(req.body.login, req.body.password, req.body.email)

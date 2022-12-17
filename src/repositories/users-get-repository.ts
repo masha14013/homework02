@@ -50,6 +50,11 @@ export const usersGetRepository = {
             emailConfirmation: user.emailConfirmation
         }
     },
+    async findUserByLoginOrEmail(login: string, email: string): Promise<boolean> {
+        const user = await usersCollection.findOne({$or: [{email: email}, {login: login}]})
+        if (!user) return true
+        return false
+    },
     async findCurrentUser() {
 
     }
