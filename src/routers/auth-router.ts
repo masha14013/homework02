@@ -37,6 +37,7 @@ authRouter.post('/registration',
     const isExist = await usersGetRepository.findUserByLoginOrEmail(req.body.login, req.body.email)
         if (!isExist) {
             res.sendStatus(400)
+            return
         }
         const user = await usersService.createUser(req.body.login, req.body.password, req.body.email)
         if (user) {
