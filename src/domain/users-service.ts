@@ -31,7 +31,7 @@ export const usersService = {
                 }
             }
         const createdUser = await usersRepository.createUser(newUser)
-        console.log('createdUser', createdUser)
+console.log('createdUser', createdUser)
         if(!createdUser) {
             return null
         }
@@ -80,7 +80,6 @@ export const usersService = {
     },
     async confirmCode(code: string): Promise<boolean> {
         let user = await usersRepository.findUserByConfirmationCode(code)
-        console.log('user from repo', user)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
         if (user.emailConfirmation.confirmationCode !== code) return false
