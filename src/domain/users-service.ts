@@ -78,9 +78,19 @@ export const usersService = {
         const hash = await bcrypt.hash(password, salt)
         return hash
     },
-    async confirmEmail(code: string): Promise<boolean> {
+    async confirmCode(code: string): Promise<boolean> {
         let user = await usersRepository.findUserByConfirmationCode(code)
-        console.log('user conf', user)
+        console.log('user from repo', user)
+        if (!user) return false
+        if (user.emailConfirmation.isConfirmed) return false
+        if (user.emailConfirmation.confirmationCode !== code) return false
+        if (user.emailConfirmation.expirationDate < new Date()) return false
+
+        let result = await usersRepository.updateConfirmation(user._id)
+        return result
+    },
+    async confirmEmail(email: string, code: string): Promise<boolean> {
+        let user = await usersRepository.findUserByConfirmationCode(email)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
         if (user.emailConfirmation.confirmationCode !== code) return false

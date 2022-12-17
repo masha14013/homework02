@@ -15,7 +15,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     const userId = await jwtService.getUserIdByToken(token)
     console.log('userId', userId)
     if (userId) {
-        req.user = await usersGetRepository.findUserById(userId)
+        req.user = await usersGetRepository.findUserById(userId.toString())
 
         const users = await usersCollection.find().toArray()
         console.log('users', users)

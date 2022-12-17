@@ -4,7 +4,6 @@ import {ObjectId} from "mongodb";
 export const usersRepository = {
     async createUser (newUser: UserAccountDBType): Promise<UsersType | null> {
         const result = await usersCollection.insertOne(newUser)
-        console.log('result', result)
         if(!result.acknowledged) {
             return null
         }
@@ -20,7 +19,6 @@ export const usersRepository = {
     },
     async findUserByConfirmationCode(code: string) {
         const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': code})
-        console.log('user from code', user)
         return user
     },
     async updateConfirmation(_id: ObjectId) {
