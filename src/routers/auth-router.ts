@@ -35,7 +35,7 @@ authRouter.post('/registration',
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
     const isExist = await usersGetRepository.findUserByLoginOrEmail(req.body.login, req.body.email)
-        if (!isExist) {
+        if (isExist) {
             res.sendStatus(400)
             return
         }
