@@ -34,9 +34,14 @@ authRouter.post('/registration',
     emailRegistrationValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-    const isExist = await usersGetRepository.findUserByLoginOrEmail(req.body.login, req.body.email)
-        if (isExist) {
-            res.status(400).send({errorsMessages: [{ message: "User is already exist", field: "email" }]})
+        const loginExist = await usersGetRepository.findUserByLogin(req.body.login)
+        if (loginExist) {
+            res.status(400).send({errorsMessages: [{message: "Login is already exist", field: "login"}]})
+            return
+        }
+        const emailExist = await usersGetRepository.findUserByEmail(req.body.email)
+        if (emailExist) {
+            res.status(400).send({errorsMessages: [{message: "Email is already exist", field: "email"}]})
             return
         }
         const user = await usersService.createUser(req.body.login, req.body.password, req.body.email)
@@ -49,7 +54,7 @@ authRouter.post('/registration',
 
 authRouter.post('/registration-confirmation',
     async (req: Request, res: Response) => {
-    const result = await usersService.confirmCode(req.body.code)
+        const result = await usersService.confirmCode(req.body.code)
         if (result) {
             res.sendStatus(204)
         } else {

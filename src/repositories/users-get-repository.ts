@@ -50,8 +50,18 @@ export const usersGetRepository = {
             emailConfirmation: user.emailConfirmation
         }
     },
-    async findUserByLoginOrEmail(login: string, email: string): Promise<boolean> {
+    /*async findUserByLoginOrEmail(login: string, email: string): Promise<boolean> {
         const user = await usersCollection.findOne({$or: [{'accountData.email': email}, {'accountData.login': login}]})
+        if (!user) return false
+        return true
+    },*/
+    async findUserByLogin(login: string): Promise<boolean> {
+        const user = await usersCollection.findOne({'accountData.login': login})
+        if (!user) return false
+        return true
+    },
+    async findUserByEmail(email: string): Promise<boolean> {
+        const user = await usersCollection.findOne({'accountData.email': email})
         if (!user) return false
         return true
     },
