@@ -91,6 +91,7 @@ authRouter.post('/login',
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
+        console.log(user, 'from login')
         if (!user) {
             res.sendStatus(401)
         } else {

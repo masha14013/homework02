@@ -42,7 +42,7 @@ export const usersGetRepository = {
     },
     async findByLoginOrEmail(loginOrEmail: string): Promise<UsersType | null> {
         //const user = await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
-        const user = await usersCollection.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.userName": loginOrEmail}]})
+        const user = await usersCollection.findOne({$or: [{"accountData.email": loginOrEmail}, {"accountData.login": loginOrEmail}]})
         if (!user) return null
         return {
             id: user._id.toString(),
@@ -63,6 +63,7 @@ export const usersGetRepository = {
     async findUserByEmail(email: string): Promise<UsersType | null> {
         const user = await usersCollection.findOne({'accountData.email': email})
         if (!user) return null
+        if(user.emailConfirmation.isConfirmed) return null
         return {
             id: user._id.toString(),
             accountData: user.accountData,
