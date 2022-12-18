@@ -73,7 +73,6 @@ authRouter.post('/registration-email-resending',
             res.status(400).send({errorsMessages: [{message: "Email doesn't exist", field: "email"}]})
             return
         }
-        console.log('emailExist', user)
         const confirmCode = uuidv4()
         await emailManager.sendPasswordRecoveryMessage(user.accountData.email, 'Confirm address', confirmCode)
         res.sendStatus(204)
@@ -91,7 +90,6 @@ authRouter.post('/login',
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
-        console.log(user, 'from login')
         if (!user) {
             res.sendStatus(401)
         } else {
