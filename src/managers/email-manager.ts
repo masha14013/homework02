@@ -6,7 +6,7 @@ export const emailManager = {
         await emailAdapter.sendEmail(
                 email,
             subject,
-            `<a href="https://some-front.com/registration-confirmation/?code=${code}">${code}</a>`)
+            `<a href="https://some-front.com/registration-confirmation?code=${code}">${code}</a>`)
     }
 }
 
