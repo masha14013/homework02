@@ -55,11 +55,12 @@ authRouter.post('/registration',
 
 authRouter.post('/registration-confirmation',
     async (req: Request, res: Response) => {
-    const result = await usersService.confirmCode(req.body.code)
+        const result = await usersService.confirmCode(req.body.code)
         if (result) {
             res.sendStatus(204)
         } else {
-            res.sendStatus(400)
+            res.status(400).send({errorsMessages: [{message: "Code doesn't exist", field: "code"}]})
+            return
         }
     })
 
