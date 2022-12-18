@@ -71,13 +71,14 @@ authRouter.post('/registration-email-resending',
     emailRegistrationValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        const emailExist = await usersGetRepository.findUserByEmail(req.body.email)
-        if (!emailExist) {
+        const user = await usersGetRepository.findUserByEmail(req.body.email)
+        if (!user) {
             res.status(400).send({errorsMessages: [{message: "Email doesn't exist", field: "email"}]})
             return
         }
-        await emailManager.sendPasswordRecoveryMessage(emailExist)
-
+        console.log('emailExist', user)
+        await emailManager.sendPasswordRecoveryMessage(user)
+        res.sendStatus(204)
        /* const result = await usersService.confirmEmail(req.body.email, req.body.code)
         if (result) {
             res.sendStatus(204)
