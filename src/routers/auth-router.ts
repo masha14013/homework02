@@ -71,12 +71,10 @@ authRouter.post('/registration-email-resending',
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const emailExist = await usersGetRepository.findUserByEmail(req.body.email)
-        console.log('emailExist', emailExist)
         if (!emailExist) {
             res.status(400).send({errorsMessages: [{message: "Email doesn't exist", field: "email"}]})
             return
         }
-        if (emailExist.emailConfirmation.isConfirmed === true) return false
         const result = await usersService.confirmEmail(req.body.email, req.body.code)
         if (result) {
             res.sendStatus(204)

@@ -6,6 +6,8 @@ export const emailManager = {
         await emailAdapter.sendEmail(
                 user.accountData.email,
                 "Confirm email",
-                `<div><a href="https://some-front.com/confirm-registration?code=${user.emailConfirmation.confirmationCode}">Confirm email, click here</a></div>`)
+            `<a href="https://some-front.com/registration-confirmation/?code=${user.emailConfirmation.confirmationCode}">${user.emailConfirmation.confirmationCode}</a>`)
     }
 }
+
+

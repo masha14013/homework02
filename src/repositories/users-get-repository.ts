@@ -60,14 +60,10 @@ export const usersGetRepository = {
         if (!user) return false
         return true
     },
-    async findUserByEmail(email: string): Promise<UsersType | null> {
+    async findUserByEmail(email: string): Promise<boolean> {
         const user = await usersCollection.findOne({'accountData.email': email})
-        if (!user) return null
-        return {
-            id: user._id.toString(),
-            accountData: user.accountData,
-            emailConfirmation: user.emailConfirmation
-        }
+        if (!user) return false
+        return true
     },
     async findCurrentUser() {
 
