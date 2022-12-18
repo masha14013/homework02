@@ -103,10 +103,12 @@ postsRouter.get('/:postId/comments', async (req: Request<{ postId: string }, {},
     console.log('req.query', req.query)
     const postId = req.params.postId
     const post = await postsGetRepository.findPostById(postId)
+    console.log('post', post)
     if(!post) return res.sendStatus(404)
 
     let foundComments = await commentsGetRepository.findCommentsForSpecificPost
-    (postId, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
+        (postId, parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection)
+    console.log('foundComments', foundComments)
     let foundCommentsTotalCount = await commentsGetRepository.findCommentsForSpecificPostTotalCount(postId)
     let foundCommentsFull = {
         pagesCount: Math.ceil(foundCommentsTotalCount / parsedQuery.pageSize),
@@ -135,7 +137,6 @@ postsRouter.post('/:postId/comments',
         }
 
         const newComment = await commentsService.createComment(content, postId, user)
-        console.log('newComment, user', newComment, user)
         if (!newComment) {
             res.sendStatus(400)
         } else {
