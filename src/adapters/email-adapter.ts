@@ -10,7 +10,8 @@ export const emailAdapter = {
             },
         });
 
-        try {// send mail with defined transport object
+        try {
+            // send mail with defined transport object
             let info = await transport.sendMail({
                 from: '"Test letter" <tyyyuuiop5555@gmail.com>', // sender address
                 to: email, // list of receivers
