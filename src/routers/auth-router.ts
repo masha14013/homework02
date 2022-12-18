@@ -5,8 +5,7 @@ import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {usersGetRepository} from "../repositories/users-get-repository";
-import {usersCollection} from "../repositories/db";
-import {ObjectId} from "mongodb";
+import {usersRepository} from "../repositories/users-repository";
 
 export const authRouter = Router({})
 
@@ -54,6 +53,11 @@ authRouter.post('/registration',
 
 authRouter.post('/registration-confirmation',
     async (req: Request, res: Response) => {
+    const codeExist = await usersRepository.findUserByConfirmationCode(req.body.code)
+        if (codeExist) {
+            res.status(400).send({errorsMessages: [{message: "User is already exist", field: "code"}]})
+            return
+        }
         const result = await usersService.confirmCode(req.body.code)
         if (result) {
             res.sendStatus(204)
@@ -66,6 +70,11 @@ authRouter.post('/registration-email-resending',
     emailRegistrationValidation,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
+        const emailExist = await usersGetRepository.findUserByEmail(req.body.email)
+        if (emailExist) {
+            res.status(400).send({errorsMessages: [{message: "Email is already exist", field: "email"}]})
+            return
+        }
         const result = await usersService.confirmEmail(req.body.email, req.body.code)
         if (result) {
             res.sendStatus(204)
