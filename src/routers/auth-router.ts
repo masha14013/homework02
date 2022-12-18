@@ -7,6 +7,7 @@ import {authMiddleware} from "../middlewares/auth-middleware";
 import {usersGetRepository} from "../repositories/users-get-repository";
 import {usersRepository} from "../repositories/users-repository";
 import {emailManager} from "../managers/email-manager";
+import { v4 as uuidv4 } from 'uuid';
 
 export const authRouter = Router({})
 
@@ -77,7 +78,8 @@ authRouter.post('/registration-email-resending',
             return
         }
         console.log('emailExist', user)
-        await emailManager.sendPasswordRecoveryMessage(user)
+        const confirmCode = uuidv4()
+        await emailManager.sendPasswordRecoveryMessage(user.accountData.email, 'Confirm address', confirmCode)
         res.sendStatus(204)
        /* const result = await usersService.confirmEmail(req.body.email, req.body.code)
         if (result) {

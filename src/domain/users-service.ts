@@ -36,7 +36,7 @@ console.log('createdUser', createdUser)
             return null
         }
         try {
-            await emailManager.sendPasswordRecoveryMessage(createdUser)
+            await emailManager.sendPasswordRecoveryMessage(createdUser.accountData.email, 'Confirm address', createdUser.emailConfirmation.confirmationCode)
         } catch (error) {
             console.error(error)
             await usersRepository.deleteUser(createdUser.id)
