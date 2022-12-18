@@ -82,7 +82,6 @@ console.log('createdUser', createdUser)
         let user = await usersRepository.findUserByConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
-        if (user.emailConfirmation.confirmationCode !== code) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false
 
         let result = await usersRepository.updateConfirmation(user._id)
