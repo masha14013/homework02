@@ -6,6 +6,7 @@ import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {usersGetRepository} from "../repositories/users-get-repository";
 import {usersRepository} from "../repositories/users-repository";
+import {emailManager} from "../managers/email-manager";
 
 export const authRouter = Router({})
 
@@ -75,12 +76,14 @@ authRouter.post('/registration-email-resending',
             res.status(400).send({errorsMessages: [{message: "Email doesn't exist", field: "email"}]})
             return
         }
-        const result = await usersService.confirmEmail(req.body.email, req.body.code)
+        await emailManager.sendPasswordRecoveryMessage(emailExist)
+
+       /* const result = await usersService.confirmEmail(req.body.email, req.body.code)
         if (result) {
             res.sendStatus(204)
         } else {
             res.sendStatus(400)
-        }
+        }*/
     })
 
 authRouter.post('/login',
