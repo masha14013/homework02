@@ -44,11 +44,11 @@ console.log('createdUser', createdUser)
         }
         return createdUser;
     },
-    async updateUserCode(userId: string): Promise<boolean> {
-        const confirmCode = uuidv4()
+    async updateUserCode(userId: string, code: string): Promise<boolean> {
+        code = uuidv4()
         const result = await usersCollection.updateOne({_id: new ObjectId(userId)}, {
             $set: {
-                'emailConfirmation.confirmationCode': confirmCode
+                'emailConfirmation.confirmationCode': code
             }
         })
         return result.matchedCount === 1
