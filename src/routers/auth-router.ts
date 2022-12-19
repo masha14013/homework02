@@ -73,7 +73,7 @@ authRouter.post('/registration-email-resending',
             res.status(400).send({errorsMessages: [{message: "Email doesn't exist", field: "email"}]})
             return
         }
-        await usersService.updateUserCode(user.id, user.emailConfirmation.confirmationCode)
+        await usersService.updateUserCode(user.id)
         // const confirmCode = uuidv4()
         // await emailManager.sendPasswordRecoveryMessage(user.accountData.email, 'Confirm address', confirmCode)
         res.sendStatus(204)
