@@ -44,13 +44,21 @@ console.log('createdUser', createdUser)
         }
         return createdUser;
     },
-    async updateUserCode(userId: string, code: string): Promise<boolean> {
-        code = uuidv4()
-        const result = await usersCollection.updateOne({_id: new ObjectId(userId)}, {
+    async updateUserCode(user: any): Promise<boolean> {
+        const code = uuidv4()
+        const result = await usersCollection.updateOne({_id: new ObjectId(user.id)}, {
             $set: {
                 'emailConfirmation.confirmationCode': code
             }
         })
+        try {
+            await emailManager.sendPasswordRecoveryMessage(user.accountData.email, 'Confirm address', user.emailConfirmation.confirmationCode)
+        } catch (error) {
+            console.error(error)
+            await usersRepository.deleteUser(user.id)
+            return false
+        }
+
         return result.matchedCount === 1
     },
     async deleteUser(id: string): Promise<boolean> {
