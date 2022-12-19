@@ -1,4 +1,4 @@
-import {UserAccountDBType, UsersType} from "../repositories/db";
+import {UserAccountDBType, usersCollection, UsersType} from "../repositories/db";
 import {usersRepository} from "../repositories/users-repository";
 import bcrypt from 'bcrypt'
 import {ObjectId} from "mongodb";
@@ -43,6 +43,14 @@ console.log('createdUser', createdUser)
             return null
         }
         return createdUser;
+    },
+    async updateUserCode(userId: string, code: string): Promise<boolean> {
+        const result = await usersCollection.updateOne({_id: new ObjectId(userId)}, {
+            $set: {
+                'emailConfirmation.confirmationCode': code
+            }
+        })
+        return result.matchedCount === 1
     },
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
