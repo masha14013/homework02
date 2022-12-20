@@ -9,7 +9,7 @@ export const commentsService = {
             const newComment = {
                 content: content,
                 userId: user.id,
-                userLogin: user.login,
+                userLogin: user.accountData.login,
                 postId: postId,
                 createdAt: new Date().toISOString()
             }

@@ -137,6 +137,7 @@ postsRouter.post('/:postId/comments',
         }
 
         const newComment = await commentsService.createComment(content, postId, user)
+        console.log('comment', newComment)
         if (!newComment) {
             res.sendStatus(400)
         } else {
