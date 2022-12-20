@@ -40,8 +40,7 @@ usersRouter.post('/',
         let password = req.body.password
         let email = req.body.email
 
-        const newUser = await usersService.createUser(login, password, email)
-        console.log('user from router', newUser)
+        const newUser = await usersService.createUserWithoutEmailSending(login, password, email)
         if (!newUser) {
             res.status(500).send('something went wrong')
         } else {

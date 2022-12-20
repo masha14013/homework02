@@ -44,6 +44,35 @@ console.log('createdUser', createdUser)
         }
         return createdUser;
     },
+    async createUserWithoutEmailSending (login: string, password: string, email: string): Promise<UsersType | null> {
+        const passwordSalt = await bcrypt.genSalt(10)
+        const passwordHash = await this._generateHash(password, passwordSalt)
+        const newUser: UserAccountDBType =
+            {
+                _id: new ObjectId(),
+                accountData: {
+                    login,
+                    email,
+                    passwordHash,
+                    passwordSalt,
+                    createdAt: new Date().toISOString()
+                },
+                emailConfirmation: {
+                    confirmationCode: uuidv4(),
+                    expirationDate: add(new Date(), {
+                        hours: 1,
+                        minutes: 3
+                    }),
+                    isConfirmed: true
+                }
+            }
+        const createdUser = await usersRepository.createUser(newUser)
+        if(!createdUser) {
+            return null
+        } else {
+            return createdUser
+        }
+    },
     async updateUserCode(user: any): Promise<boolean> {
         const code = uuidv4()
         const result = await usersCollection.updateOne({_id: new ObjectId(user.id)}, {
