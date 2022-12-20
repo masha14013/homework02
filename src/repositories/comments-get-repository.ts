@@ -4,6 +4,7 @@ import {ObjectId} from "mongodb";
 export const commentsGetRepository = {
     async findCommentById(id: string): Promise<CommentsType | null> {
         const comment = await commentsCollection.findOne({_id: new ObjectId(id)} )
+        console.log('comment', comment)
         if(!comment) {
             return null
         } else {

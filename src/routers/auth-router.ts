@@ -5,9 +5,6 @@ import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {usersGetRepository} from "../repositories/users-get-repository";
-import {usersRepository} from "../repositories/users-repository";
-import {emailManager} from "../managers/email-manager";
-import { v4 as uuidv4 } from 'uuid';
 
 export const authRouter = Router({})
 

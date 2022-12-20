@@ -100,10 +100,8 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
 })
 postsRouter.get('/:postId/comments', async (req: Request<{ postId: string }, {}, {}, PostsQueryType, {}>, res: Response) => {
     const parsedQuery = postsQueryParamsParser(req.query)
-    console.log('req.query', req.query)
     const postId = req.params.postId
     const post = await postsGetRepository.findPostById(postId)
-    console.log('post', post)
     if(!post) return res.sendStatus(404)
 
     let foundComments = await commentsGetRepository.findCommentsForSpecificPost

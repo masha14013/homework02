@@ -4,7 +4,6 @@ import {commentsGetRepository} from "../repositories/comments-get-repository";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {body} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {ObjectId, ObjectID} from "mongodb";
 
 export const commentsRouter = Router({})
 export const checkForHexRegExp = new RegExp("^[0-9a-fA-F]{24}$");
@@ -20,7 +19,6 @@ commentsRouter.put('/:commentId',
     async (req: Request, res: Response) => {
         let content = req.body.content
         const id = req.params.commentId
-        console.log('user', req.user)
 
         if(!checkForHexRegExp.test(id)) {
             res.sendStatus(404)
