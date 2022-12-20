@@ -51,14 +51,15 @@ console.log('createdUser', createdUser)
                 'emailConfirmation.confirmationCode': code
             }
         })
+        const updatedUser = await usersCollection.findOne({_id: new ObjectId(user.id)})
+        if (!updatedUser) return false
         try {
-            await emailManager.sendPasswordRecoveryMessage(user.accountData.email, 'Confirm address', user.emailConfirmation.confirmationCode)
+            await emailManager.sendPasswordRecoveryMessage(user.accountData.email, 'Confirm address', updatedUser.emailConfirmation.confirmationCode)
         } catch (error) {
             console.error(error)
             await usersRepository.deleteUser(user.id)
             return false
         }
-
         return result.matchedCount === 1
     },
     async deleteUser(id: string): Promise<boolean> {
@@ -97,6 +98,7 @@ console.log('createdUser', createdUser)
     },
     async confirmCode(code: string): Promise<boolean> {
         let user = await usersRepository.findUserByConfirmationCode(code)
+        console.log('user confirm', user)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false

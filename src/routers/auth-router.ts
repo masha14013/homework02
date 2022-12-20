@@ -69,13 +69,8 @@ authRouter.post('/registration-email-resending',
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
         const user = await usersGetRepository.findUserByEmail(req.body.email)
-        console.log('user resend', user)
         if (!user) {
             res.status(400).send({errorsMessages: [{message: "Email doesn't exist", field: "email"}]})
-            return
-        }
-        if (user.emailConfirmation.isConfirmed === true) {
-            res.status(400).send({errorsMessages: [{message: "Email is already confirmed", field: "email"}]})
             return
         }
         let result = await usersService.updateUserCode(user)
