@@ -74,6 +74,10 @@ authRouter.post('/registration-email-resending',
             res.status(400).send({errorsMessages: [{message: "Email doesn't exist", field: "email"}]})
             return
         }
+        if (user.emailConfirmation.isConfirmed === true) {
+            res.status(400).send({errorsMessages: [{message: "Email is already confirmed", field: "email"}]})
+            return
+        }
         let result = await usersService.updateUserCode(user)
         if (result) {
             res.sendStatus(204)
