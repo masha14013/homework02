@@ -4,16 +4,16 @@ import {settings} from "../settings";
 import {UsersType} from "../repositories/db";
 
 export const jwtService = {
-    async createJWT(user: UsersType | null) {
-        const token = jwt.sign({userId: user!.id}, settings.JWT_SECRET, {expiresIn: '10d'})
-        return token
+    async createAccessJWT(userId: string | null) {
+        const accessToken = jwt.sign({userId: userId}, settings.JWT_SECRET, {expiresIn: '5m'})
+        return accessToken
+    },
+    async createRefreshJWT(userId: string | null) {
+        const refreshToken = jwt.sign({userId: userId}, settings.JWT_SECRET, {expiresIn: '10m'})
+        return refreshToken
     },
     async getUserIdByToken(token: string) {
-        try {
             const result: any = jwt.verify(token, settings.JWT_SECRET)
             return new ObjectId(result.userId)
-        } catch (error) {
-            return null
-        }
     }
 }

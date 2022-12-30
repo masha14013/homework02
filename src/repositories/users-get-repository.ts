@@ -1,5 +1,6 @@
 import {EmailConfirmationType, UserAccountDBType, UserAccountType, usersCollection, UsersType} from "./db";
 import {ObjectId} from "mongodb";
+import {usersService} from "../domain/users-service";
 
 export const usersGetRepository = {
     async findUsers(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any, searchLoginTerm: string, searchEmailTerm: string) {

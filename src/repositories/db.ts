@@ -10,6 +10,7 @@ export const postsCollection = db.collection<PostsType>("posts")
 export const authCollection = db.collection<AuthType>("login")
 export const usersCollection = db.collection<UserAccountDBType>("users")
 export const commentsCollection = db.collection<CommentsDBType>("comments")
+export const tokenCollection = db.collection<TokenDBType>("token")
 
 export type BlogsType = {
     _id?: ObjectId,
@@ -101,12 +102,17 @@ export type CommentsType = {
 }
 export type CommentsDBType = {
     _id: ObjectId,
-    //id: string,
     content: string,
     userId: string,
     userLogin: string,
     postId: string,
     createdAt: string
+}
+export type TokenDBType = {
+    _id: ObjectId
+    token: any,
+    userId: string,
+    expirationDate: Date
 }
 
 export async function runDb() {

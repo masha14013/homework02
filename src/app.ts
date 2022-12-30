@@ -19,6 +19,9 @@ const app = express()
 
 app.use(express.json())
 
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World!')
 })

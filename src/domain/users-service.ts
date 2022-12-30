@@ -31,7 +31,6 @@ export const usersService = {
                 }
             }
         const createdUser = await usersRepository.createUser(newUser)
-console.log('createdUser', createdUser)
         if(!createdUser) {
             return null
         }

@@ -5,6 +5,8 @@ import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {usersGetRepository} from "../repositories/users-get-repository";
+import jwt from "jsonwebtoken";
+import {tokenCollection} from "../repositories/db";
 
 export const authRouter = Router({})
 
@@ -87,9 +89,45 @@ authRouter.post('/login',
         if (!user) {
             res.sendStatus(401)
         } else {
-            const token = await jwtService.createJWT(user)
-            res.status(200).send({accessToken: token})
+            const accessToken = await jwtService.createAccessJWT(user.id)
+            const refreshToken = await jwtService.createRefreshJWT(user.id)
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true
+            })
+            res.status(200).send({accessToken: accessToken})
+            //res.redirect('/users/me')
         }
+    })
+
+authRouter.post('/refresh-token',
+    async (req: Request, res: Response) => {
+
+        const refreshToken = req.cookies['refreshToken']
+        console.log('cookie', req.cookies['refresh-token'])
+        if (!refreshToken) {
+            return res.sendStatus(401)
+        }
+        const userId = await jwtService.getUserIdByToken(refreshToken)
+        if (!userId) {
+            return res.sendStatus(401)
+        } else {
+            const accessTokenNew = await jwtService.createAccessJWT(userId.toString())
+            const refreshTokenNew = await jwtService.createRefreshJWT(userId.toString())
+            console.log('accessTokenNew', accessTokenNew)
+            console.log('refreshTokenNew', refreshTokenNew)
+
+            /*await tokenCollection.insertOne(refreshToken)*/
+
+            res.cookie('refreshToken', refreshTokenNew, {
+                httpOnly: true
+            })
+            res.status(200).send({accessToken: accessTokenNew})
+        }
+    })
+
+authRouter.post('/logout',
+    async (req: Request, res: Response) => {
+        res.sendStatus(204)
     })
 
 authRouter.get('/me',
@@ -97,3 +135,5 @@ authRouter.get('/me',
     async (req: Request, res: Response) => {
         return await usersGetRepository.findCurrentUser()
     })
+
+// { accessToken: token}
