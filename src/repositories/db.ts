@@ -110,9 +110,7 @@ export type CommentsDBType = {
 }
 export type TokenDBType = {
     _id: ObjectId
-    token: any,
-    userId: string,
-    expirationDate: Date
+    token: any
 }
 
 export async function runDb() {
@@ -125,6 +123,7 @@ export async function runDb() {
         await client.db("auth").command({ping: 1});
         await client.db("users").command({ping: 1});
         await client.db("comments").command({ping: 1});
+        await client.db("token").command({ping: 1});
         console.log("Connected successfully to mongo server");
     } catch {
         console.log("Connection failed")

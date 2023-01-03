@@ -5,11 +5,11 @@ import {UsersType} from "../repositories/db";
 
 export const jwtService = {
     async createAccessJWT(userId: string | null) {
-        const accessToken = jwt.sign({userId: userId}, settings.JWT_SECRET, {expiresIn: '5m'})
+        const accessToken = jwt.sign({userId: userId}, settings.JWT_SECRET, {expiresIn: '10s'})
         return accessToken
     },
     async createRefreshJWT(userId: string | null) {
-        const refreshToken = jwt.sign({userId: userId}, settings.JWT_SECRET, {expiresIn: '10m'})
+        const refreshToken = jwt.sign({userId: userId}, settings.JWT_SECRET, {expiresIn: '20s'})
         return refreshToken
     },
     async getUserIdByToken(token: string) {
