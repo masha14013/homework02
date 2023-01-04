@@ -51,6 +51,9 @@ export type UsersType = {
 }
 export type UserAccountDBType = {
     _id: ObjectId,
+    login: string,
+    email: string,
+    createdAt: string,
     accountData: UserAccountType,
     emailConfirmation: EmailConfirmationType
 }
