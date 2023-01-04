@@ -14,8 +14,8 @@ export const usersService = {
         const newUser: UserAccountDBType =
             {
                 _id: new ObjectId(),
-                login,
-                email,
+                login: login,
+                email: email,
                 createdAt: new Date().toISOString(),
                 accountData: {
                     login,
@@ -72,8 +72,8 @@ export const usersService = {
         const newUser: UserAccountDBType =
             {
                 _id: new ObjectId(),
-                login,
-                email,
+                login: login,
+                email: email,
                 createdAt: new Date().toISOString(),
                 accountData: {
                     login,
