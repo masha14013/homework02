@@ -2,18 +2,18 @@ import {usersCollection, UserAccountDBType, UsersType} from "./db";
 import {ObjectId} from "mongodb";
 
 export const usersRepository = {
-    async createUser (newUser: UserAccountDBType): Promise<UsersType | null> {
+    async createUser (newUser: UserAccountDBType)/*: Promise<UserAccountDBType | null>*/ {
         const result = await usersCollection.insertOne(newUser)
         if(!result.acknowledged) {
             return null
         }
         return {
             id: newUser._id.toString(),
-            login: newUser.login,
-            email: newUser.email,
-            createdAt: new Date().toISOString(),
             accountData: newUser.accountData,
             emailConfirmation: newUser.emailConfirmation
+            /*login: newUser.login,
+            email: newUser.email,
+            createdAt: new Date().toISOString()*/
         }
     },
     async deleteUser(id: string): Promise<boolean> {

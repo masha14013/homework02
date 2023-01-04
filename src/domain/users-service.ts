@@ -14,9 +14,6 @@ export const usersService = {
         const newUser: UserAccountDBType =
             {
                 _id: new ObjectId(),
-                login: login,
-                email: email,
-                createdAt: new Date().toISOString(),
                 accountData: {
                     login,
                     email,
@@ -44,37 +41,20 @@ export const usersService = {
             await usersRepository.deleteUser(createdUser.id)
             return null
         }
-        return createdUser;
+        const mappedUser = {
+            id: newUser._id.toString(),
+            login: newUser.accountData.login,
+            email: newUser.accountData.email,
+            createdAt: newUser.accountData.createdAt
+        }
+        return mappedUser;
     },
     async createUserWithoutEmailSending (login: string, password: string, email: string): Promise<UsersType | null> {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, passwordSalt)
-        /*const newUser: UserAccountDBType =
-            {
-                _id: new ObjectId(),
-                accountData: {
-                    login,
-                    email,
-                    passwordHash,
-                    passwordSalt,
-                    createdAt: new Date().toISOString()
-                },
-                emailConfirmation: {
-                    confirmationCode: uuidv4(),
-                    expirationDate: add(new Date(), {
-                        hours: 1,
-                        minutes: 3
-                    }),
-                    isConfirmed: true
-                }
-            }*/
-
         const newUser: UserAccountDBType =
             {
                 _id: new ObjectId(),
-                login: login,
-                email: email,
-                createdAt: new Date().toISOString(),
                 accountData: {
                     login,
                     email,
@@ -96,7 +76,12 @@ export const usersService = {
         if(!createdUser) {
             return null
         } else {
-            return createdUser
+            return {
+                id: newUser._id.toString(),
+                login: newUser.accountData.login,
+                email: newUser.accountData.email,
+                createdAt: newUser.accountData.createdAt
+            }
         }
     },
     async updateUserCode(user: any): Promise<boolean> {
@@ -120,7 +105,7 @@ export const usersService = {
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
-    async checkCredentials(loginOrEmail: string, password: string): Promise<UsersType | null> {
+    async checkCredentials(loginOrEmail: string, password: string)/*: Promise<UsersType | null>*/ {
         const user = await usersGetRepository.findByLoginOrEmail(loginOrEmail)
         if(!user) return null
         if (!user.emailConfirmation.isConfirmed) return null

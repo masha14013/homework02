@@ -48,15 +48,10 @@ export type UsersType = {
     id: string,
     login: string,
     email: string,
-    createdAt: string,
-    accountData: UserAccountType,
-    emailConfirmation: EmailConfirmationType
+    createdAt: string
 }
 export type UserAccountDBType = {
     _id: ObjectId,
-    login: string,
-    email: string,
-    createdAt: string,
     accountData: UserAccountType,
     emailConfirmation: EmailConfirmationType
 }
