@@ -9,6 +9,9 @@ export const usersRepository = {
         }
         return {
             id: newUser._id.toString(),
+            login: newUser.login,
+            email: newUser.email,
+            createdAt: new Date().toISOString(),
             accountData: newUser.accountData,
             emailConfirmation: newUser.emailConfirmation
         }

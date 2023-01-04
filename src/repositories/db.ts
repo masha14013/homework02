@@ -46,6 +46,9 @@ export type PostsQueryType = {
 
 export type UsersType = {
     id: string,
+    login: string,
+    email: string,
+    createdAt: string,
     accountData: UserAccountType,
     emailConfirmation: EmailConfirmationType
 }
