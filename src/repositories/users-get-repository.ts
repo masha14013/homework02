@@ -36,6 +36,9 @@ export const usersGetRepository = {
         } else {
             return {
                 id: user._id.toString(),
+                login: user.login,
+                email: user.email,
+                createdAt: new Date().toISOString(),
                 accountData: user.accountData,
                 emailConfirmation: user.emailConfirmation
             }
@@ -47,6 +50,9 @@ export const usersGetRepository = {
         if (!user) return null
         return {
             id: user._id.toString(),
+            login: user.login,
+            email: user.email,
+            createdAt: new Date().toISOString(),
             accountData: user.accountData,
             emailConfirmation: user.emailConfirmation
         }
@@ -67,6 +73,9 @@ export const usersGetRepository = {
         if(user.emailConfirmation.isConfirmed) return null
         return {
             id: user._id.toString(),
+            login: user.login,
+            email: user.email,
+            createdAt: new Date().toISOString(),
             accountData: user.accountData,
             emailConfirmation: user.emailConfirmation
         }

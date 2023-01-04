@@ -92,7 +92,6 @@ export const usersService = {
                 }
             }
 
-
         const createdUser = await usersRepository.createUser(newUser)
         if(!createdUser) {
             return null

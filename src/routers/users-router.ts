@@ -9,13 +9,8 @@ import {inputValidationMiddleware} from "../middlewares/input-validation-middlew
 
 export const usersRouter = Router({})
 
-// const pageNumberValidation = query('pageNumber').isInt().toInt(1).default(1)
-// const pageSizeValidation = query('pageSize').isInt().toInt(10).default(10)
-
 usersRouter.get('/',
     authValidationMiddleware,
-    //pageSizeValidation,
-    //pageNumberValidation,
     inputValidationMiddleware,
     async (req: Request<{}, {}, {}, UsersQueryType, {}>, res: Response) => {
         const parsedQuery = queryParamsParser(req.query)
