@@ -8,10 +8,9 @@ import {usersService} from "../domain/users-service";
 export const usersGetRepository = {
     async findUsers(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any, searchLoginTerm: string, searchEmailTerm: string) {
         const filter = {
-            $or: [{login: {$regex: searchLoginTerm ?? '', $options: "i"}},
-                {email: {$regex: searchEmailTerm ?? '', $options: "i"}}]
+                $or: [{'accountData.login': {$regex: searchLoginTerm ?? '', $options: "i"}},
+                    {'accountData.email': {$regex: searchEmailTerm ?? '', $options: "i"}}]
         }
-
         return await usersCollection.find(filter, {projection: {_id: 0, passwordHash: 0, passwordSalt: 0}})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
@@ -61,7 +60,7 @@ export const usersGetRepository = {
     async findUserByEmail(email: string): Promise<UsersType | null> {
         const user = await usersCollection.findOne({'accountData.email': email})
         if (!user) return null
-        if(user.emailConfirmation.isConfirmed) return null
+        if (user.emailConfirmation.isConfirmed) return null
         return {
             id: user._id.toString(),
             login: user.accountData.login,

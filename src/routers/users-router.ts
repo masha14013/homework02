@@ -14,8 +14,10 @@ usersRouter.get('/',
     inputValidationMiddleware,
     async (req: Request<{}, {}, {}, UsersQueryType, {}>, res: Response) => {
         const parsedQuery = queryParamsParser(req.query)
-        console.log(req.query)
+        console.log("req.query",req.query)
+        console.log("parsedQuery",parsedQuery)
         let foundUsers = await usersGetRepository.findUsers(parsedQuery.pageNumber, parsedQuery.pageSize, parsedQuery.sortBy, parsedQuery.sortDirection, parsedQuery.searchLoginTerm, parsedQuery.searchEmailTerm)
+        console.log('foundUsers',foundUsers)
         let foundUsersTotalCount = await usersGetRepository.findUsersTotalCount(parsedQuery.searchLoginTerm, parsedQuery.searchEmailTerm)
         let foundUsersFull = {
             pagesCount: Math.ceil(foundUsersTotalCount / parsedQuery.pageSize),
@@ -40,6 +42,9 @@ usersRouter.post('/',
             res.status(500).send('something went wrong')
         } else {
             const result = await usersGetRepository.findUserById(newUser.id)
+            if(!result){
+                res.status(500).send('something went wrong')
+            }
             res.status(201).send(result)
         }
     })
