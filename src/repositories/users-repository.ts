@@ -4,16 +4,13 @@ import {ObjectId} from "mongodb";
 export const usersRepository = {
     async createUser (newUser: UserAccountDBType)/*: Promise<UserAccountDBType | null>*/ {
         const result = await usersCollection.insertOne(newUser)
-        if(!result.acknowledged) {
+        if(!result/*.acknowledged*/) {
             return null
         }
         return {
             id: newUser._id.toString(),
             accountData: newUser.accountData,
             emailConfirmation: newUser.emailConfirmation
-            /*login: newUser.login,
-            email: newUser.email,
-            createdAt: new Date().toISOString()*/
         }
     },
     async deleteUser(id: string): Promise<boolean> {

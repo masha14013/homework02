@@ -17,13 +17,6 @@ export const usersGetRepository = {
             .limit(pageSize)
             .sort({[sortBy]: sortDirection})
             .toArray()
-
-        /*return await usersCollection.find(filter)
-            .project({_id: 0, passwordHash: 0, passwordSalt: 0})
-            .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize)
-            .sort({[sortBy]: sortDirection})
-            .toArray()*/
     },
     async findUsersTotalCount(searchLoginTerm: string, searchEmailTerm: string): Promise<number> {
         const filter = {

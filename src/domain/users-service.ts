@@ -41,13 +41,12 @@ export const usersService = {
             await usersRepository.deleteUser(createdUser.id)
             return null
         }
-        const mappedUser = {
+        return {
             id: newUser._id.toString(),
             login: newUser.accountData.login,
             email: newUser.accountData.email,
             createdAt: newUser.accountData.createdAt
         }
-        return mappedUser;
     },
     async createUserWithoutEmailSending (login: string, password: string, email: string): Promise<UsersType | null> {
         const passwordSalt = await bcrypt.genSalt(10)
