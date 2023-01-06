@@ -91,7 +91,8 @@ authRouter.post('/login',
             const accessToken = await jwtService.createAccessJWT(user.id)
             const refreshToken = await jwtService.createRefreshJWT(user.id)
             res.cookie('refreshToken', refreshToken, {
-                httpOnly: true
+                httpOnly: true,
+                secure: true
             })
             res.status(200).send({accessToken: accessToken})
             //res.redirect('/users/me')
@@ -123,7 +124,8 @@ authRouter.post('/refresh-token',
             await tokenCollection.insertOne(refreshToken)
 
             res.cookie('refreshToken', refreshTokenNew, {
-                httpOnly: true
+                httpOnly: true,
+                secure: true
             })
             res.status(200).send({accessToken: accessTokenNew})
         }
