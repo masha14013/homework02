@@ -12,8 +12,15 @@ export const jwtService = {
         return refreshToken
     },
     async getUserIdByToken(token: string) {
+        // jwt => verify // decode
+        // decode достаёт все данные из токена не проверяя его "время жизни" и секрет
+        // verify достаёт все данные из токена и!!! проверяет его "время жизни" и секрет => если токен уже "умер" или секрет не подходит то метод ВЕРИФАЙ возвращает ошибку
+        try {
             const result: any = jwt.verify(token, settings.JWT_SECRET)
-        console.log('result', result)
             return new ObjectId(result.userId)
+        } catch (e) {
+            return null
+        }
+
     }
 }

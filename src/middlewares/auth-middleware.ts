@@ -3,21 +3,24 @@ import {jwtService} from "../application/jwt-service";
 import {usersGetRepository} from "../repositories/users-get-repository";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-
-    if (!req.headers.authorization) {
+    const auth = req.headers.authorization
+    if (!auth) {
         res.status(401).send("Invalid token")
         return
     }
 
-    const token = req.headers.authorization.split(' ')[1]
+    const authType = auth.split(' ')[0]
+    if (authType !== 'Bearer') return res.sendStatus(401)
+    const token = auth.split(' ')[1]
+    if (!token) return res.sendStatus(401)
 
     const userId = await jwtService.getUserIdByToken(token)
-    console.log('route', req.baseUrl+req.path)
-    console.log('userId', userId)
-    if (userId) {
-        req.user = await usersGetRepository.findUserById(userId.toString())
+    if (!userId) return res.sendStatus(401)
 
-        return next()
-    }
-    res.status(401).send("Invalid token")
+    const user = await usersGetRepository.findUserById(userId.toString())
+    if (!user) return res.sendStatus(401)
+
+    req.user = user
+
+    return next()
 }

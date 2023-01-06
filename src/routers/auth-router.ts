@@ -141,9 +141,9 @@ authRouter.get('/me',
     async (req: Request, res: Response) => {
 
         let currentUser = {
-            email: req.user?.email,
-            login: req.user?.login,
-            userId: req.user?.id
+            email: req.user!.email,
+            login: req.user!.login,
+            userId: req.user!.id
         }
         res.status(200).send(currentUser)
     })
