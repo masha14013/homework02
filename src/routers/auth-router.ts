@@ -95,7 +95,7 @@ authRouter.post('/login',
                 secure: true
             })
             res.status(200).send({accessToken: accessToken})
-            //res.redirect('/users/me')
+            //res.redirect('/auth/me')
         }
     })
 
@@ -139,5 +139,11 @@ authRouter.post('/logout',
 authRouter.get('/me',
     authMiddleware,
     async (req: Request, res: Response) => {
-        return await usersGetRepository.findCurrentUser()
+
+        let currentUser = {
+            email: req.user?.email,
+            login: req.user?.login,
+            userId: req.user?.id
+        }
+        res.status(200).send(currentUser)
     })

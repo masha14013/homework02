@@ -75,12 +75,12 @@ export type EmailConfirmationType = {
     //sentEmails: SentEmailType[]
 }
 
-export type RegistrationDataType = {
+/*export type RegistrationDataType = {
     ip: string
 }
 export type SentEmailType = {
     sentDate: Date
-}
+}*/
 
 export type UsersQueryType = {
     pageNumber: string,

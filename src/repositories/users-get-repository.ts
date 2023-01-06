@@ -4,6 +4,7 @@ import {
 } from "./db";
 import {ObjectId} from "mongodb";
 import {usersService} from "../domain/users-service";
+import {jwtService} from "../application/jwt-service";
 
 export const usersGetRepository = {
     async findUsers(pageNumber: number, pageSize: number, sortBy: string, sortDirection: any, searchLoginTerm: string, searchEmailTerm: string) {
@@ -65,12 +66,7 @@ export const usersGetRepository = {
             id: user._id.toString(),
             login: user.accountData.login,
             email: user.accountData.email,
-            createdAt: new Date().toISOString(),
-            /*accountData: user.accountData,
-            emailConfirmation: user.emailConfirmation*/
+            createdAt: new Date().toISOString()
         }
-    },
-    async findCurrentUser() {
-
     }
 }

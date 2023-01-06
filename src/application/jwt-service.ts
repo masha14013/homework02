@@ -1,7 +1,6 @@
 import {ObjectId} from "mongodb";
 import jwt from 'jsonwebtoken';
 import {settings} from "../settings";
-import {UsersType} from "../repositories/db";
 
 export const jwtService = {
     async createAccessJWT(userId: string | null) {
@@ -14,6 +13,7 @@ export const jwtService = {
     },
     async getUserIdByToken(token: string) {
             const result: any = jwt.verify(token, settings.JWT_SECRET)
+        console.log('result', result)
             return new ObjectId(result.userId)
     }
 }
