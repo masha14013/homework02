@@ -6,6 +6,7 @@ import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {usersGetRepository} from "../repositories/users-get-repository";
 import {tokenCollection} from "../repositories/db";
+import {refreshTokenValidationMiddleware} from "../middlewares/refresh-token-validation-middleware";
 
 export const authRouter = Router({})
 
@@ -100,35 +101,23 @@ authRouter.post('/login',
     })
 
 authRouter.post('/refresh-token',
+    refreshTokenValidationMiddleware,
     async (req: Request, res: Response) => {
+        let userId = req.user!.id
 
-        const refreshToken = req.cookies['refreshToken']
-        if (!refreshToken) {
-            res.sendStatus(401)
-            return
-        }
-        let refreshTokenFromDB = await tokenCollection.find().sort({'_id': -1}).limit(1)
-        if (refreshToken === refreshTokenFromDB) {
-            res.sendStatus(401)
-            return
-        }
-        const userId = await jwtService.getUserIdByToken(refreshToken)
-        if (!userId) {
-            res.sendStatus(401)
-        } else {
-            const accessTokenNew = await jwtService.createAccessJWT(userId.toString())
-            const refreshTokenNew = await jwtService.createRefreshJWT(userId.toString())
-            console.log('accessTokenNew', accessTokenNew)
-            console.log('refreshTokenNew', refreshTokenNew)
+        const accessTokenNew = await jwtService.createAccessJWT(userId.toString())
+        const refreshTokenNew = await jwtService.createRefreshJWT(userId.toString())
+        console.log('accessTokenNew', accessTokenNew)
+        console.log('refreshTokenNew', refreshTokenNew)
 
-            await tokenCollection.insertOne(refreshToken)
+        // await tokenCollection.insertOne(refreshToken)
 
-            res.cookie('refreshToken', refreshTokenNew, {
-                httpOnly: true,
-                secure: true
-            })
-            res.status(200).send({accessToken: accessTokenNew})
-        }
+        res.cookie('refreshToken', refreshTokenNew, {
+            httpOnly: true,
+            secure: true
+        })
+        res.status(200).send({accessToken: accessTokenNew})
+
     })
 
 authRouter.post('/logout',

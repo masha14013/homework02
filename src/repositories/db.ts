@@ -111,7 +111,7 @@ export type CommentsDBType = {
 }
 export type TokenDBType = {
     _id: ObjectId
-    token: any
+    token: string
 }
 
 export async function runDb() {
