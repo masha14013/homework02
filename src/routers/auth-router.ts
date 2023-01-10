@@ -102,13 +102,10 @@ authRouter.post('/login',
 authRouter.post('/refresh-token',
     refreshTokenValidationMiddleware,
     async (req: Request, res: Response) => {
+
         let userId = req.user!.id
-        console.log('userId', userId)
-
         const refreshToken = req.cookies['refreshToken']
-
-        let result = await usersService.updateRefreshToken(userId, refreshToken)
-        console.log('result', result)
+        await usersService.updateRefreshToken(userId, refreshToken)
 
         const accessTokenNew = await jwtService.createAccessJWT(userId.toString())
         const refreshTokenNew = await jwtService.createRefreshJWT(userId.toString())
@@ -124,6 +121,9 @@ authRouter.post('/refresh-token',
 authRouter.post('/logout',
     refreshTokenValidationMiddleware,
     async (req: Request, res: Response) => {
+        let userId = req.user!.id
+        const refreshToken = req.cookies['refreshToken']
+        await usersService.updateRefreshToken(userId, refreshToken)
         res.clearCookie('refreshToken')
         res.sendStatus(204)
     })
