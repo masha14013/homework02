@@ -10,7 +10,7 @@ export const postsCollection = db.collection<PostsType>("posts")
 export const authCollection = db.collection<AuthType>("login")
 export const usersCollection = db.collection<UserAccountDBType>("users")
 export const commentsCollection = db.collection<CommentsDBType>("comments")
-export const tokenCollection = db.collection<TokenDBType>("token")
+// export const tokenCollection = db.collection<TokenDBType>("token")
 
 export type BlogsType = {
     _id?: ObjectId,
@@ -52,6 +52,7 @@ export type UsersType = {
 }
 export type UserAccountDBType = {
     _id: ObjectId,
+    revokedToken?: string,
     accountData: UserAccountType,
     emailConfirmation: EmailConfirmationType
 }
@@ -109,10 +110,10 @@ export type CommentsDBType = {
     postId: string,
     createdAt: string
 }
-export type TokenDBType = {
-    _id: ObjectId
-    token: string
-}
+// export type TokenDBType = {
+//     _id: ObjectId
+//     token: string
+// }
 
 export async function runDb() {
     try {
@@ -124,7 +125,7 @@ export async function runDb() {
         await client.db("auth").command({ping: 1});
         await client.db("users").command({ping: 1});
         await client.db("comments").command({ping: 1});
-        await client.db("token").command({ping: 1});
+        // await client.db("token").command({ping: 1});
         console.log("Connected successfully to mongo server");
     } catch {
         console.log("Connection failed")

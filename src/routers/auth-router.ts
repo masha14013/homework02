@@ -5,7 +5,6 @@ import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {usersGetRepository} from "../repositories/users-get-repository";
-import {tokenCollection} from "../repositories/db";
 import {refreshTokenValidationMiddleware} from "../middlewares/refresh-token-validation-middleware";
 
 export const authRouter = Router({})
@@ -93,7 +92,7 @@ authRouter.post('/login',
             const refreshToken = await jwtService.createRefreshJWT(user.id)
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                secure: true
+                secure: false
             })
             res.status(200).send({accessToken: accessToken})
             //res.redirect('/auth/me')
@@ -104,13 +103,15 @@ authRouter.post('/refresh-token',
     refreshTokenValidationMiddleware,
     async (req: Request, res: Response) => {
         let userId = req.user!.id
+        console.log('userId', userId)
+
+        const refreshToken = req.cookies['refreshToken']
+
+        let result = await usersService.updateRefreshToken(userId, refreshToken)
+        console.log('result', result)
 
         const accessTokenNew = await jwtService.createAccessJWT(userId.toString())
         const refreshTokenNew = await jwtService.createRefreshJWT(userId.toString())
-        console.log('accessTokenNew', accessTokenNew)
-        console.log('refreshTokenNew', refreshTokenNew)
-
-        // await tokenCollection.insertOne(refreshToken)
 
         res.cookie('refreshToken', refreshTokenNew, {
             httpOnly: true,
@@ -121,7 +122,9 @@ authRouter.post('/refresh-token',
     })
 
 authRouter.post('/logout',
+    refreshTokenValidationMiddleware,
     async (req: Request, res: Response) => {
+        res.clearCookie('refreshToken')
         res.sendStatus(204)
     })
 

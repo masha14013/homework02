@@ -137,12 +137,19 @@ export const usersService = {
     },
     async confirmCode(code: string): Promise<boolean> {
         let user = await usersRepository.findUserByConfirmationCode(code)
-        console.log('user confirm', user)
         if (!user) return false
         if (user.emailConfirmation.isConfirmed) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false
 
         let result = await usersRepository.updateConfirmation(user._id)
         return result
+    },
+    async updateRefreshToken(userId: string, refreshToken: string): Promise<boolean> {
+        let isUpdated = await usersRepository.updateRefreshToken(userId, refreshToken)
+        if (!isUpdated) {
+            return false
+        } else {
+            return true
+        }
     }
 }
